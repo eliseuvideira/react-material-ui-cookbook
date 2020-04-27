@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -6,9 +6,9 @@ import {
   IconButton,
   Typography,
   Button,
-  Fade,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import HideOnScroll from './HideOnScroll';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,26 +25,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Page = () => {
-  const [scroll, setScroll] = useState({ scrolling: false, scrollTop: 0 });
-  const onScroll = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    setScroll({
-      scrollTop,
-      scrolling: scrollTop > scroll.scrollTop,
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, []);
-
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Fade in={!scroll.scrolling}>
+      <HideOnScroll>
         <AppBar>
           <Toolbar>
             <IconButton
@@ -60,7 +44,7 @@ const Page = () => {
             <Button color="inherit">Login</Button>
           </Toolbar>
         </AppBar>
-      </Fade>
+      </HideOnScroll>
       <div className={classes.toolbarMargin} />
       <ul>
         {new Array(500).fill(null).map((_, i) => (
