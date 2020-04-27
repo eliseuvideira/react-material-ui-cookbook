@@ -20,17 +20,17 @@ const Page = () => {
   return (
     <div className={classes.root}>
       <Container spacing={4}>
-        <Item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        <Item xs={12}>
+          <Paper className={classes.paper}>xs=12</Paper>
         </Item>
-        <Item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        <Item xs={6}>
+          <Paper className={classes.paper}>xs=6</Paper>
         </Item>
-        <Item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        <Item xs={4}>
+          <Paper className={classes.paper}>xs=4</Paper>
         </Item>
-        <Item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        <Item xs={2}>
+          <Paper className={classes.paper}>xs=2</Paper>
         </Item>
       </Container>
     </div>
