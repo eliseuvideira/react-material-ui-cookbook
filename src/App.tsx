@@ -1,7 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import Counter from './components/Counter';
+import Page from './components/Page';
 
-const App = () => <Counter />;
+const App = () => <Page />;
 
 export default hot(App);
