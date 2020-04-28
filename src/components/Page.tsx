@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from './HideOnScroll';
+import ScrollTopButton from './ScrollTopButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +29,7 @@ const Page = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <div id="back-to-top-anchor" />
       <HideOnScroll>
         <AppBar>
           <Toolbar>
@@ -51,6 +53,7 @@ const Page = () => {
           <li key={i}>{i}</li>
         ))}
       </ul>
+      <ScrollTopButton />
     </div>
   );
 };
