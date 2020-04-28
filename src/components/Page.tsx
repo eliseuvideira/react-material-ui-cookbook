@@ -2,9 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ScrollTopButton from './ScrollTopButton';
 import Toolbar from './Toolbar';
-import { Button } from '@material-ui/core';
+import { Route, BrowserRouter } from 'react-router-dom';
+import { Typography } from '@material-ui/core';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -15,26 +16,43 @@ const useStyles = makeStyles({
     marginLeft: -12,
     marginRight: 20,
   },
-});
+  toolbarMargin: theme.mixins.toolbar,
+}));
 
 const Page = () => {
   const classes = useStyles();
+  const screen = ({
+    title,
+    content,
+  }: {
+    title: string;
+    content: string;
+  }) => () => (
+    <>
+      <Toolbar title={title} />
+      <Typography>{content}</Typography>
+    </>
+  );
   return (
     <div className={classes.root}>
       <div id="back-to-top-anchor" />
-      <Toolbar
-        title="My Toolbar"
-        RightButton={() => (
-          <Button color="secondary" variant="contained">
-            Logout
-          </Button>
-        )}
-      />
-      <ul>
-        {new Array(500).fill(null).map((_, i) => (
-          <li key={i}>{i}</li>
-        ))}
-      </ul>
+      <BrowserRouter>
+        <Route
+          exact
+          path="/"
+          render={screen({ title: 'Home', content: 'Home Page' })}
+        />
+        <Route
+          exact
+          path="/users"
+          render={screen({ title: 'Users', content: 'Users Page' })}
+        />
+        <Route
+          exact
+          path="/about"
+          render={screen({ title: 'About', content: 'About Page' })}
+        />
+      </BrowserRouter>
       <ScrollTopButton />
     </div>
   );

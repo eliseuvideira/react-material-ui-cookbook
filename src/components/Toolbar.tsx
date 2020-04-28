@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  MenuItems?: ({ closeMenu }: { closeMenu: () => void }) => JSX.Element;
+  MenuItems?: () => JSX.Element;
   RightButton?: () => JSX.Element;
   title: string;
 }
@@ -51,7 +52,7 @@ const Toolbar: React.FC<Props> = ({ MenuItems, RightButton, title }) => {
             <MenuIcon />
           </IconButton>
           <Menu anchorEl={anchor} open={!!anchor} onClose={closeMenu}>
-            {MenuItems && <MenuItems closeMenu={closeMenu} />}
+            {MenuItems && <MenuItems />}
           </Menu>
           <Typography variant="h6" color="inherit" className={classes.flex}>
             {title}
@@ -65,12 +66,18 @@ const Toolbar: React.FC<Props> = ({ MenuItems, RightButton, title }) => {
 };
 
 Toolbar.defaultProps = {
-  MenuItems: function MenuItems({ closeMenu }: { closeMenu: () => void }) {
+  MenuItems: function MenuItems() {
     return (
       <>
-        <MenuItem onClick={closeMenu}>Profile</MenuItem>
-        <MenuItem onClick={closeMenu}>My account</MenuItem>
-        <MenuItem onClick={closeMenu}>Logout</MenuItem>
+        <MenuItem component={Link} to="/">
+          Home
+        </MenuItem>
+        <MenuItem component={Link} to="/users">
+          Users
+        </MenuItem>
+        <MenuItem component={Link} to="/about">
+          About
+        </MenuItem>
       </>
     );
   },
