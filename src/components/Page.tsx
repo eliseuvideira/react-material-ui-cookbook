@@ -1,17 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import HideOnScroll from './HideOnScroll';
 import ScrollTopButton from './ScrollTopButton';
+import Toolbar from './Toolbar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
@@ -22,32 +14,14 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: -12,
     marginRight: 20,
   },
-  toolbarMargin: theme.mixins.toolbar,
-}));
+});
 
 const Page = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <div id="back-to-top-anchor" />
-      <HideOnScroll>
-        <AppBar>
-          <Toolbar>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.flex}>
-              My Title
-            </Typography>
-            <Button color="inherit">Login</Button>
-          </Toolbar>
-        </AppBar>
-      </HideOnScroll>
-      <div className={classes.toolbarMargin} />
+      <Toolbar title="My Toolbar" />
       <ul>
         {new Array(500).fill(null).map((_, i) => (
           <li key={i}>{i}</li>
