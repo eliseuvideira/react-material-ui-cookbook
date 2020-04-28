@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ScrollTopButton from './ScrollTopButton';
 import Toolbar from './Toolbar';
 import { Route, BrowserRouter } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
+import DrawerType from './DrawerType';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Page = () => {
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const screen = ({
     title,
@@ -31,6 +33,9 @@ const Page = () => {
     <>
       <Toolbar title={title} />
       <Typography>{content}</Typography>
+      <Button onClick={() => setOpen(!open)}>
+        {open ? 'Hide' : 'Show'} Drawer
+      </Button>
     </>
   );
   return (
@@ -53,6 +58,11 @@ const Page = () => {
           render={screen({ title: 'About', content: 'About Page' })}
         />
       </BrowserRouter>
+      <DrawerType
+        variant={'temporary'}
+        open={open}
+        onChangeOpen={(isOpen) => setOpen(isOpen)}
+      />
       <ScrollTopButton />
     </div>
   );
