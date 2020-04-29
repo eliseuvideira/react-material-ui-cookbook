@@ -24,7 +24,8 @@ interface DrawerItemProps {
 
 interface DrawerProps
   extends Omit<Omit<MaterialDrawerProps, 'variant'>, 'className'> {
-  items: DrawerItemProps[];
+  items?: DrawerItemProps[];
+  bottomItems?: DrawerItemProps[];
   open: boolean;
   switchDrawer: (isOpen: boolean) => void;
 }
@@ -61,22 +62,26 @@ const useStyles = makeStyles((theme) =>
       padding: theme.spacing(0, 1),
       ...theme.mixins.toolbar,
     },
+    bottom: {
+      marginTop: 'auto',
+    },
   }),
 );
 
 const Drawer: React.FC<DrawerProps> = ({
   open,
   items,
+  bottomItems,
   switchDrawer,
   ...props
 }) => {
   const classes = useStyles();
   return (
     <MaterialDrawer
-      // className={clsx(classes.drawer, {
-      //   [classes.drawerOpen]: open,
-      //   [classes.drawerClose]: !open,
-      // })}
+      className={clsx(classes.drawer, {
+        [classes.drawerOpen]: open,
+        [classes.drawerClose]: !open,
+      })}
       classes={{
         paper: clsx({
           [classes.drawerOpen]: open,
@@ -92,25 +97,33 @@ const Drawer: React.FC<DrawerProps> = ({
         </IconButton>
       </div>
       <Divider />
-      <List>
-        {items.length > 0 &&
-          items.map((item) => (
+      {items && (
+        <List>
+          {items.map((item) => (
             <ListItem button key={item.key}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>
           ))}
-      </List>
+        </List>
+      )}
+      {bottomItems && (
+        <List className={classes.bottom}>
+          {bottomItems.map((item) => (
+            <ListItem button key={item.key}>
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItem>
+          ))}
+        </List>
+      )}
     </MaterialDrawer>
   );
 };
 
-Drawer.defaultProps = {
-  items: [],
-};
-
 Drawer.propTypes = {
   items: PropTypes.any,
+  bottomItems: PropTypes.any,
   switchDrawer: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };

@@ -29,6 +29,8 @@ const Page = () => {
             text: 'Authorization',
             icon: <FingerprintIcon />,
           },
+        ]}
+        bottomItems={[
           {
             key: 'Settings',
             text: 'Settings',
