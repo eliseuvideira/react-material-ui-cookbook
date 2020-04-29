@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
-import HomeIcon from '@material-ui/icons/Home';
+import SettingsIcon from '@material-ui/icons/Settings';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 const useStyles = makeStyles(
   createStyles({
@@ -17,11 +18,23 @@ const Page = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className={classes.root}>
-      <AppBar title="My App" onAppBarClick={() => setOpen(!open)} />
+      <AppBar open={open} title="My App" onAppBarClick={() => setOpen(!open)} />
       <Drawer
         open={open}
+        switchDrawer={(value) => setOpen(value)}
         onClose={() => setOpen(false)}
-        items={[{ key: 'Home', text: 'Home', icon: <HomeIcon /> }]}
+        items={[
+          {
+            key: 'Authorization',
+            text: 'Authorization',
+            icon: <FingerprintIcon />,
+          },
+          {
+            key: 'Settings',
+            text: 'Settings',
+            icon: <SettingsIcon />,
+          },
+        ]}
       />
     </div>
   );
