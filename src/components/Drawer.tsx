@@ -20,6 +20,9 @@ interface DrawerItemProps {
   key: string | number;
   icon: JSX.Element;
   text: string;
+  disabled?: boolean;
+  hidden?: boolean;
+  onClick?: () => void;
 }
 
 interface DrawerProps
@@ -36,6 +39,7 @@ const useStyles = makeStyles((theme) =>
       width: DRAWER_WIDTH,
       flexShrink: 0,
       whiteSpace: 'nowrap',
+      overflowX: 'hidden',
     },
     drawerOpen: {
       width: DRAWER_WIDTH,
@@ -43,6 +47,7 @@ const useStyles = makeStyles((theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
+      overflowX: 'hidden',
     },
     drawerClose: {
       transition: theme.transitions.create('width', {
@@ -99,18 +104,25 @@ const Drawer: React.FC<DrawerProps> = ({
       <Divider />
       {items && (
         <List>
-          {items.map((item) => (
-            <ListItem button key={item.key}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
+          {items
+            .filter((item) => !item.hidden)
+            .map((item) => (
+              <ListItem
+                button
+                key={item.key}
+                onClick={item.onClick}
+                disabled={item.disabled}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            ))}
         </List>
       )}
       {bottomItems && (
         <List className={classes.bottom}>
           {bottomItems.map((item) => (
-            <ListItem button key={item.key}>
+            <ListItem button key={item.key} onClick={item.onClick}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>
