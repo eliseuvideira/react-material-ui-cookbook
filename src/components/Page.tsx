@@ -21,7 +21,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/Home';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Route } from 'react-router';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { BrowserRouter, NavLink, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const APP_NAME = 'My App';
 const DRAWER_WIDTH = 200;
@@ -97,7 +98,58 @@ const useStyles = makeStyles((theme) => ({
   padding5: {
     padding: theme.spacing(5),
   },
+  activeListItem: {
+    color: theme.palette.primary.main,
+  },
 }));
+
+const NavListItem: React.FC<{
+  classes: any;
+  Icon: any;
+  label: string;
+  to: string;
+  active?: boolean;
+  [key: string]: any;
+}> = ({ classes, Icon, label, to, active, ...props }) => (
+  <ListItem button component={NavLink} to={to} {...props}>
+    <ListItemIcon
+      classes={{ root: clsx({ [classes.activeListItem]: active }) }}
+    >
+      <Icon />
+    </ListItemIcon>
+    <ListItemText
+      classes={{ root: clsx({ [classes.activeListItem]: active }) }}
+    >
+      <Typography>{label}</Typography>
+    </ListItemText>
+  </ListItem>
+);
+
+NavListItem.propTypes = {
+  classes: PropTypes.any.isRequired,
+  Icon: PropTypes.any.isRequired,
+  label: PropTypes.any.isRequired,
+  to: PropTypes.any.isRequired,
+  active: PropTypes.bool,
+};
+
+const NavItem: React.FC<any> = (props) => (
+  <Switch>
+    <Route
+      exact
+      path={props.to}
+      render={() => <NavListItem active={true} {...props} />}
+    />
+    <Route path="/" render={() => <NavListItem {...props} />} />
+  </Switch>
+);
+
+NavItem.propTypes = {
+  classes: PropTypes.any.isRequired,
+  Icon: PropTypes.any.isRequired,
+  label: PropTypes.any.isRequired,
+  to: PropTypes.any.isRequired,
+};
 
 const Page = () => {
   const classes = useStyles();
@@ -151,30 +203,22 @@ const Page = () => {
             </Toolbar>
             <Divider />
             <List>
-              <ListItem
-                button
-                component={Link}
+              <NavItem
+                classes={classes}
+                Icon={HomeIcon}
+                label="Home"
                 to="/"
                 className={classes.borderRadius16}
-              >
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </ListItem>
+              />
             </List>
             <List className={classes.drawerBottomList}>
-              <ListItem
-                button
-                component={Link}
+              <NavItem
+                classes={classes}
+                Icon={SettingsIcon}
+                label="Settings"
                 to="/settings"
                 className={classes.borderRadius16}
-              >
-                <ListItemIcon>
-                  <SettingsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Settings" />
-              </ListItem>
+              />
             </List>
           </Drawer>
         </Grid>
