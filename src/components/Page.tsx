@@ -152,6 +152,7 @@ const Page = () => {
             <Divider />
             <List>
               <ListItem
+                button
                 component={Link}
                 to="/"
                 className={classes.borderRadius16}
@@ -164,6 +165,7 @@ const Page = () => {
             </List>
             <List className={classes.drawerBottomList}>
               <ListItem
+                button
                 component={Link}
                 to="/settings"
                 className={classes.borderRadius16}
