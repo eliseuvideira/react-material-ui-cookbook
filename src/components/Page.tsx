@@ -20,6 +20,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/Home';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { Route } from 'react-router';
+import { BrowserRouter, Link } from 'react-router-dom';
 
 const APP_NAME = 'My App';
 const DRAWER_WIDTH = 200;
@@ -102,87 +104,98 @@ const Page = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <Grid
-      container
-      className={clsx(classes.root, { [classes.rootShift]: drawerOpen })}
-    >
-      <Grid item sm={12}>
-        <CssBaseline />
-        <AppBar
-          position="fixed"
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: drawerOpen,
-          })}
-        >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              onClick={() => setDrawerOpen(!drawerOpen)}
-              className={classes.appBarMenuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit">
-              {APP_NAME}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Toolbar />
-        <Drawer
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: drawerOpen,
-            [classes.drawerClose]: !drawerOpen,
-          })}
-          classes={{
-            paper: clsx({
+    <BrowserRouter>
+      <Grid
+        container
+        className={clsx(classes.root, { [classes.rootShift]: drawerOpen })}
+      >
+        <Grid item sm={12}>
+          <CssBaseline />
+          <AppBar
+            position="fixed"
+            className={clsx(classes.appBar, {
+              [classes.appBarShift]: drawerOpen,
+            })}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                onClick={() => setDrawerOpen(!drawerOpen)}
+                className={classes.appBarMenuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit">
+                {APP_NAME}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Toolbar />
+          <Drawer
+            variant="permanent"
+            className={clsx(classes.drawer, {
               [classes.drawerOpen]: drawerOpen,
               [classes.drawerClose]: !drawerOpen,
-            }),
-          }}
-        >
-          <Toolbar className={classes.drawerToolbar}>
-            <IconButton onClick={() => setDrawerOpen(false)}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List>
-            <ListItem
-              button
-              onClick={() => alert('Home')}
-              className={classes.borderRadius16}
-            >
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-          </List>
-          <List className={classes.drawerBottomList}>
-            <ListItem
-              button
-              onClick={() => alert('Settings')}
-              className={classes.borderRadius16}
-            >
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </ListItem>
-          </List>
-        </Drawer>
-      </Grid>
-      <Grid item sm={12}>
-        <Grid container className={classes.padding5}>
-          <Grid item sm={12}>
-            <Paper>
-              <Typography>Page</Typography>
-            </Paper>
+            })}
+            classes={{
+              paper: clsx({
+                [classes.drawerOpen]: drawerOpen,
+                [classes.drawerClose]: !drawerOpen,
+              }),
+            }}
+          >
+            <Toolbar className={classes.drawerToolbar}>
+              <IconButton onClick={() => setDrawerOpen(false)}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </Toolbar>
+            <Divider />
+            <List>
+              <ListItem
+                component={Link}
+                to="/"
+                className={classes.borderRadius16}
+              >
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </List>
+            <List className={classes.drawerBottomList}>
+              <ListItem
+                component={Link}
+                to="/settings"
+                className={classes.borderRadius16}
+              >
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+              </ListItem>
+            </List>
+          </Drawer>
+        </Grid>
+        <Grid item sm={12}>
+          <Grid container className={classes.padding5}>
+            <Grid item sm={12}>
+              <Paper>
+                <Route
+                  exact
+                  path="/"
+                  render={() => <Typography>Home</Typography>}
+                />
+                <Route
+                  exact
+                  path="/settings"
+                  render={() => <Typography>Settings</Typography>}
+                />
+              </Paper>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </BrowserRouter>
   );
 };
 
