@@ -23,9 +23,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { Route } from 'react-router';
 import { BrowserRouter, NavLink, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-const APP_NAME = 'My App';
-const DRAWER_WIDTH = 200;
+import { DRAWER_WIDTH, APP_NAME } from '../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
