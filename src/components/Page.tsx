@@ -14,6 +14,8 @@ import {
   ListItemText,
   Paper,
   ListSubheader,
+  Button,
+  Collapse,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -47,6 +49,17 @@ const useStyles = makeStyles((theme) => ({
   },
   activeListItem: {
     color: theme.palette.primary.main,
+  },
+  listSubheader: {
+    padding: 0,
+    minWidth: 0,
+    color: 'inherit',
+    '&:hover': {
+      background: 'inherit',
+    },
+  },
+  listSubheaderLabel: {
+    justifyContent: 'flex-start',
   },
 }));
 
@@ -140,6 +153,15 @@ const Page = () => {
       ],
     },
   ]);
+  const [sections, setSections] = useState<string[]>([]);
+
+  const toggleSection = (section: string) => () => {
+    if (sections.includes(section)) {
+      setSections(sections.filter((item) => item !== section));
+    } else {
+      setSections(sections.concat(section));
+    }
+  };
 
   return (
     <BrowserRouter>
@@ -184,21 +206,38 @@ const Page = () => {
       <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
         <Toolbar />
         <List>
-          {menus.map((menu) => (
-            <section key={menu.categoryName}>
-              <ListSubheader>{menu.categoryName}</ListSubheader>
-              {menu.categoryItems.map((item) => (
-                <NavItem
-                  key={item.to}
-                  className={classes.borderRadius16}
-                  classes={classes}
-                  Icon={item.Icon}
-                  label={item.label}
-                  to={item.to}
-                />
-              ))}
-            </section>
-          ))}
+          {menus.map((menu) => {
+            const visible = sections.includes(menu.categoryId);
+            return (
+              <section key={menu.categoryName}>
+                <ListSubheader>
+                  <Button
+                    disableRipple
+                    classes={{
+                      root: classes.listSubheader,
+                      label: classes.listSubheaderLabel,
+                    }}
+                    onClick={toggleSection(menu.categoryId)}
+                    fullWidth
+                  >
+                    {menu.categoryName}
+                  </Button>
+                </ListSubheader>
+                <Collapse in={visible}>
+                  {menu.categoryItems.map((item) => (
+                    <NavItem
+                      key={item.to}
+                      className={classes.borderRadius16}
+                      classes={classes}
+                      Icon={item.Icon}
+                      label={item.label}
+                      to={item.to}
+                    />
+                  ))}
+                </Collapse>
+              </section>
+            );
+          })}
         </List>
       </Drawer>
     </BrowserRouter>
