@@ -35,14 +35,25 @@ const Page = () => {
       disabled: true,
     },
     { title: 'Fourth Panel Title', content: 'Fourth Panel Content' },
+    { title: 'Fifth Panel Title', content: 'Fifth Panel Content' },
+    { title: 'Sixth Panel Title', content: 'Sixth Panel Content' },
+    { title: 'Seventh Panel Title', content: 'Seventh Panel Content' },
   ]);
+  const [expandedIndex, setExpandedIndex] = useState(-1);
+  const onChangeExpandedIndex = (index: number) => () =>
+    setExpandedIndex(index === expandedIndex ? -1 : index);
   return (
     <div className={classes.root}>
       <CssBaseline />
       {panels
         .filter((panel) => !panel.hidden)
         .map((panel, index) => (
-          <ExpansionPanel key={index} disabled={panel.disabled}>
+          <ExpansionPanel
+            key={index}
+            disabled={panel.disabled}
+            expanded={index === expandedIndex}
+            onChange={onChangeExpandedIndex(index)}
+          >
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography>{panel.title}</Typography>
             </ExpansionPanelSummary>
