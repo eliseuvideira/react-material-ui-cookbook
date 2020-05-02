@@ -6,6 +6,17 @@ import {
   ExpansionPanelDetails,
   Typography,
   CssBaseline,
+  Grid,
+  AppBar,
+  Drawer,
+  Toolbar,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Paper,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -14,18 +25,29 @@ import NetworkWifiIcon from '@material-ui/icons/NetworkWifi';
 import StorageIcon from '@material-ui/icons/Storage';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import BeenhereIcon from '@material-ui/icons/Beenhere';
+import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@material-ui/icons/Home';
+import { Link, BrowserRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
+  drawerPaper: {
+    width: 250,
   },
-  paper: {
+  noSelect: {
+    userSelect: 'none',
+  },
+  toolbarIconButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+  container: {
+    padding: theme.spacing(4),
+  },
+  content: {
     padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
   },
-  icon: {
-    marginRight: theme.spacing(1),
+  pt2: {
+    paddingTop: theme.spacing(2),
   },
 }));
 
@@ -62,28 +84,75 @@ const Page = () => {
   const [expandedIndex, setExpandedIndex] = useState(-1);
   const onChangeExpandedIndex = (index: number) => () =>
     setExpandedIndex(index === expandedIndex ? -1 : index);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toolbar = (
+    <Toolbar>
+      <IconButton
+        className={classes.toolbarIconButton}
+        color="inherit"
+        onClick={() => setDrawerOpen(!drawerOpen)}
+      >
+        <MenuIcon />
+      </IconButton>
+      <Typography variant="h6" className={classes.noSelect}>
+        My App
+      </Typography>
+    </Toolbar>
+  );
   return (
-    <div className={classes.root}>
+    <BrowserRouter>
       <CssBaseline />
-      {panels
-        .filter(({ hidden }) => !hidden)
-        .map(({ title, content, Icon, disabled }, index) => (
-          <ExpansionPanel
-            key={index}
-            disabled={disabled}
-            expanded={index === expandedIndex}
-            onChange={onChangeExpandedIndex(index)}
+      <AppBar position="sticky">{toolbar}</AppBar>
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        classes={{ paper: classes.drawerPaper }}
+      >
+        <AppBar position="static">{toolbar}</AppBar>
+        <Divider />
+        <List>
+          <ListItem
+            button
+            component={Link}
+            to="/"
+            onClick={() => setDrawerOpen(false)}
           >
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Icon className={classes.icon} />
-              <Typography variant="subtitle1">{title}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography>{content}</Typography>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        ))}
-    </div>
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText>Home</ListItemText>
+          </ListItem>
+        </List>
+      </Drawer>
+      <Grid container className={classes.container}>
+        <Grid item sm={12}>
+          <Paper square className={classes.content}>
+            <Typography variant="h5">Choose One</Typography>
+            <Divider />
+            <div className={classes.pt2}>
+              {panels
+                .filter(({ hidden }) => !hidden)
+                .map(({ title, content, Icon, disabled }, index) => (
+                  <ExpansionPanel
+                    key={index}
+                    disabled={disabled}
+                    expanded={index === expandedIndex}
+                    onChange={onChangeExpandedIndex(index)}
+                  >
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                      <Icon />
+                      <Typography variant="subtitle1">{title}</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <Typography>{content}</Typography>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                ))}
+            </div>
+          </Paper>
+        </Grid>
+      </Grid>
+    </BrowserRouter>
   );
 };
 
