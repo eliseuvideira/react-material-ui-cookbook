@@ -1,10 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Container from './Container';
-import Item from './Item';
-import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,66 +18,20 @@ const Page = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Container justify="space-around" spacing={4}>
-        <Item xs={3}>
-          <Container direction="column" spacing={2}>
-            <Item>
-              <Paper className={classes.paper}>
-                <Typography>One</Typography>
-              </Paper>
-            </Item>
-            <Item>
-              <Paper className={classes.paper}>
-                <Typography>Two</Typography>
-              </Paper>
-            </Item>
-          </Container>
-        </Item>
-        <Item xs={3}>
-          <Container direction="column" spacing={2}>
-            <Item>
-              <Paper className={classes.paper}>
-                <Typography>Three</Typography>
-              </Paper>
-            </Item>
-            <Item>
-              <Paper className={classes.paper}>
-                <Typography>Four</Typography>
-              </Paper>
-            </Item>
-          </Container>
-        </Item>
-        <Item xs={3}>
-          <Container direction="column" spacing={2}>
-            <Item>
-              <Paper className={classes.paper}>
-                <Typography>Five</Typography>
-              </Paper>
-            </Item>
-            <Item>
-              <Paper className={classes.paper}>
-                <Typography>Six</Typography>
-              </Paper>
-            </Item>
-          </Container>
-        </Item>
-        <Hidden smDown>
-          <Item xs={3}>
-            <Container direction="column" spacing={2}>
-              <Item>
-                <Paper className={classes.paper}>
-                  <Typography>Seven</Typography>
-                </Paper>
-              </Item>
-              <Item>
-                <Paper className={classes.paper}>
-                  <Typography>Eight</Typography>
-                </Paper>
-              </Item>
-            </Container>
-          </Item>
-        </Hidden>
-      </Container>
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+      </Grid>
     </div>
   );
 };
