@@ -17,11 +17,13 @@ import {
   ListItemText,
   Divider,
   Paper,
+  LinearProgress,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link, BrowserRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -42,8 +44,6 @@ const useStyles = makeStyles((theme) => ({
   },
   panelDetails: {
     flexDirection: 'column',
-    height: 150,
-    overflow: 'auto',
   },
 }));
 
@@ -63,6 +63,13 @@ const fetchPanelContent = async (index: number) =>
     ),
   );
 
+const MaybeProgress: React.FC<{ loading?: boolean }> = ({ loading }) =>
+  loading ? <LinearProgress /> : null;
+
+MaybeProgress.propTypes = {
+  loading: PropTypes.bool,
+};
+
 const Page = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -72,8 +79,8 @@ const Page = () => {
     { title: 'Third Panel Title...' },
     { title: 'Fourth Panel Title...' },
   ]);
-  const onChange = (index: number) => async () => {
-    if (!panels[index].content) {
+  const onChange = (index: number) => async (_: any, expanded: any) => {
+    if (!panels[index].content && expanded) {
       const content = await fetchPanelContent(index);
       const newPanels = [...panels];
       newPanels[index] = { ...newPanels[index], content };
@@ -128,7 +135,10 @@ const Page = () => {
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography>{panel.title}</Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails>{panel.content}</ExpansionPanelDetails>
+                <ExpansionPanelDetails className={classes.panelDetails}>
+                  <MaybeProgress loading={!panel.content} />
+                  <Typography>{panel.content}</Typography>
+                </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
           </Paper>
