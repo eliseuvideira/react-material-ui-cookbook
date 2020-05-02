@@ -1,9 +1,7 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, ListItem, ListItemText, List } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,58 +14,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
-  children,
-  elevation: propsElevation,
-  ...props
-}) => {
-  const [elevation, setElevation] = useState(propsElevation);
-  return (
-    <Paper
-      {...props}
-      elevation={elevation}
-      onMouseEnter={() => setElevation(5)}
-      onMouseLeave={() => setElevation(1)}
-    >
-      {children}
-    </Paper>
-  );
-};
-
-HighlightPaper.defaultProps = {
-  elevation: 1,
-};
-
-HighlightPaper.propTypes = {
-  children: PropTypes.any.isRequired,
-  elevation: PropTypes.number,
-};
-
 const Page = () => {
   const classes = useStyles();
+  const [items, setItems] = useState([
+    { name: 'First Item', timestamp: new Date(), selected: false },
+    { name: 'Second Item', timestamp: new Date(), selected: false },
+    { name: 'Third Item', timestamp: new Date(), selected: false },
+  ]);
+
+  const onClick = (index: number) => () => {
+    const newItems = [...items];
+    newItems[index] = {
+      ...newItems[index],
+      selected: !newItems[index].selected,
+    };
+    setItems(newItems);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+        <Grid item xs={12}>
+          <List>
+            {items.map((item, index) => (
+              <ListItem
+                key={index}
+                button
+                dense
+                selected={item.selected}
+                onClick={onClick(index)}
+              >
+                <ListItemText
+                  primary={item.name}
+                  secondary={item.timestamp.toLocaleString()}
+                  primaryTypographyProps={{
+                    color: item.selected ? 'primary' : undefined,
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
         </Grid>
       </Grid>
     </div>
