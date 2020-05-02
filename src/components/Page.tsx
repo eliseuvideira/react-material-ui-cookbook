@@ -1,35 +1,28 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { CssBaseline, ListItem, ListItemText, List } from '@material-ui/core';
+import {
+  CssBaseline,
+  ListItem,
+  ListItemText,
+  List,
+  ListItemIcon,
+} from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
   },
 }));
 
 const Page = () => {
   const classes = useStyles();
-  const [items, setItems] = useState([
-    { name: 'First Item', timestamp: new Date(), selected: false },
-    { name: 'Second Item', timestamp: new Date(), selected: false },
-    { name: 'Third Item', timestamp: new Date(), selected: false },
+  const [users] = useState([
+    { name: 'John Doe' },
+    { name: 'Joseph Smith' },
+    { name: 'Janice Patterson' },
   ]);
-
-  const onClick = (index: number) => () => {
-    const newItems = [...items];
-    newItems[index] = {
-      ...newItems[index],
-      selected: !newItems[index].selected,
-    };
-    setItems(newItems);
-  };
 
   return (
     <div className={classes.root}>
@@ -37,21 +30,12 @@ const Page = () => {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <List>
-            {items.map((item, index) => (
-              <ListItem
-                key={index}
-                button
-                dense
-                selected={item.selected}
-                onClick={onClick(index)}
-              >
-                <ListItemText
-                  primary={item.name}
-                  secondary={item.timestamp.toLocaleString()}
-                  primaryTypographyProps={{
-                    color: item.selected ? 'primary' : undefined,
-                  }}
-                />
+            {users.map((user, index) => (
+              <ListItem key={index} button>
+                <ListItemIcon>
+                  <AccountCircleIcon />
+                </ListItemIcon>
+                <ListItemText primary={user.name} />
               </ListItem>
             ))}
           </List>
