@@ -8,6 +8,8 @@ import {
   List,
   ListItemIcon,
   Avatar,
+  Badge,
+  Container,
 } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PropTypes from 'prop-types';
@@ -15,10 +17,14 @@ import MarkunreadIcon from '@material-ui/icons/Markunread';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import LowPriorityIcon from '@material-ui/icons/LowPriority';
 import DeleteIcon from '@material-ui/icons/Delete';
+import clsx from 'clsx';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },
+  activeAvatar: {
+    backgroundColor: theme.palette.primary[theme.palette.type],
   },
 }));
 
@@ -61,22 +67,33 @@ const Page = () => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={4}>
-        <Grid item xs={6}>
-          <List>
-            {items.map(({ Icon, name, updated }, index) => (
-              <ListItem key={index} button>
-                <ListItemIcon>
-                  <Avatar>
-                    <Icon />
-                  </Avatar>
-                </ListItemIcon>
-                <ListItemText primary={name} secondary={updated} />
-              </ListItem>
-            ))}
-          </List>
+      <Container maxWidth="lg" disableGutters>
+        <Grid container>
+          <Grid item xs={12}>
+            <List>
+              {items.map(({ Icon, name, updated, notifications }, index) => (
+                <ListItem key={index} button>
+                  <ListItemIcon>
+                    <Badge
+                      color={notifications ? 'secondary' : undefined}
+                      badgeContent={notifications}
+                    >
+                      <Avatar
+                        className={clsx({
+                          [classes.activeAvatar]: notifications,
+                        })}
+                      >
+                        <Icon />
+                      </Avatar>
+                    </Badge>
+                  </ListItemIcon>
+                  <ListItemText primary={name} secondary={updated} />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
     </div>
   );
 };
