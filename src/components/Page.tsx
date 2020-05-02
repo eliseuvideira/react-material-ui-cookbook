@@ -20,6 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import Scrollbars from 'react-custom-scrollbars';
 import { Link, BrowserRouter, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,10 +38,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TabContainer: React.FC<{ value: number }> = ({ value }) => {
+  return (
+    <AppBar position="static" color="transparent">
+      <Tabs value={value}>
+        <Tab label="Home" component={Link} to="/" />
+        <Tab label="Users" component={Link} to="/users" />
+        <Tab label="Settings" component={Link} to="/settings" />
+      </Tabs>
+    </AppBar>
+  );
+};
+
+TabContainer.propTypes = {
+  value: PropTypes.number.isRequired,
+};
+
 const Page = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -73,41 +89,40 @@ const Page = () => {
         <Grid container>
           <Grid item xs={6} className={classes.padding3}>
             <Paper square>
-              <AppBar position="static" color="transparent">
-                <Tabs
-                  value={tabIndex}
-                  onChange={(_, index) => setTabIndex(index)}
-                >
-                  <Tab label="Home" component={Link} to="/" />
-                  <Tab label="Users" component={Link} to="/users" />
-                  <Tab label="Settings" component={Link} to="/settings" />
-                </Tabs>
-              </AppBar>
               <Route
                 exact
                 path="/"
                 render={() => (
-                  <Typography component="div" className={classes.tabContent}>
-                    Home
-                  </Typography>
+                  <>
+                    <TabContainer value={0} />
+                    <Typography component="div" className={classes.tabContent}>
+                      Home
+                    </Typography>
+                  </>
                 )}
               />
               <Route
                 exact
                 path="/users"
                 render={() => (
-                  <Typography component="div" className={classes.tabContent}>
-                    Users
-                  </Typography>
+                  <>
+                    <TabContainer value={1} />
+                    <Typography component="div" className={classes.tabContent}>
+                      Users
+                    </Typography>
+                  </>
                 )}
               />
               <Route
                 exact
                 path="/settings"
                 render={() => (
-                  <Typography component="div" className={classes.tabContent}>
-                    Settings
-                  </Typography>
+                  <>
+                    <TabContainer value={2} />
+                    <Typography component="div" className={classes.tabContent}>
+                      Settings
+                    </Typography>
+                  </>
                 )}
               />
             </Paper>
