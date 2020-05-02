@@ -16,6 +16,7 @@ import {
   useTheme,
   useMediaQuery,
   Paper,
+  CssBaseline,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
@@ -51,6 +52,7 @@ const Page = () => {
   const width = useWidth();
   return (
     <div className={classes.root}>
+      <CssBaseline />
       <AppBar position="fixed">
         <Toolbar>
           <IconButton color="inherit" onClick={() => setDrawerOpen(true)}>
