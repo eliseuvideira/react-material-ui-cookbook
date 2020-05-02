@@ -18,15 +18,9 @@ import {
   Divider,
   Paper,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import DevicesIcon from '@material-ui/icons/Devices';
-import NetworkWifiIcon from '@material-ui/icons/NetworkWifi';
-import StorageIcon from '@material-ui/icons/Storage';
-import ShowChartIcon from '@material-ui/icons/ShowChart';
-import BeenhereIcon from '@material-ui/icons/Beenhere';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link, BrowserRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,44 +40,54 @@ const useStyles = makeStyles((theme) => ({
   content: {
     padding: theme.spacing(2),
   },
-  pt2: {
-    paddingTop: theme.spacing(2),
+  panelDetails: {
+    flexDirection: 'column',
+    height: 150,
+    overflow: 'auto',
   },
 }));
 
-interface IExpansionItemProps {
-  title: string;
-  content: string;
-  disabled?: boolean;
-  hidden?: boolean;
-  Icon: React.FC<any>;
-}
+const Lorem = () => (
+  <>
+    <Typography paragraph>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ultricies
+      nibh ut ipsum placerat, eget egestas leo imperdiet. Etiam consectetur
+      mollis ultrices. Fusce eu eros a dui maximus rutrum. Aenean at dolor eu
+      nunc ultricies placerat. Sed finibus porta sapien eget euismod. Donec eget
+      tortor non turpis hendrerit euismod. Phasellus at commodo augue. Maecenas
+      scelerisque augue at mattis pharetra. Aenean fermentum sed neque id
+      feugiat.
+    </Typography>
+
+    <Typography paragraph>
+      Aliquam erat volutpat. Donec sit amet venenatis leo. Nullam tincidunt diam
+      in nisi pretium, sit amet tincidunt nisi aliquet. Proin quis justo
+      consectetur, congue nisi nec, pharetra erat. Ut volutpat pulvinar neque
+      vitae vestibulum. Phasellus nisl risus, dapibus at sapien in, aliquam
+      tempus tellus. Integer accumsan tortor id dolor lacinia, et pulvinar est
+      porttitor. Mauris a est vitae arcu iaculis dictum. Sed posuere suscipit
+      ultricies. Vivamus a lacus in dui vehicula tincidunt.
+    </Typography>
+
+    <Typography paragraph>
+      In ut velit laoreet, blandit nisi id, tempus mi. Mauris interdum in turpis
+      vel tempor. Vivamus tincidunt turpis vitae porta dignissim. Quisque
+      condimentum augue arcu, quis tincidunt erat luctus sit amet. Sed quis
+      ligula malesuada, sollicitudin nisl nec, molestie tellus. Donec commodo
+      consequat gravida. Mauris in rhoncus tellus, eget posuere risus.
+      Pellentesque eget lectus lorem. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Integer condimentum, sapien varius vulputate lobortis,
+      urna elit vestibulum ligula, sit amet interdum lectus augue ac eros.
+      Vestibulum lorem ante, tincidunt eget faucibus id, placerat non est.
+      Vivamus pretium consectetur nunc at imperdiet. Nullam eu elit dui. In
+      imperdiet magna ac dui aliquam gravida. Aenean ipsum ex, fermentum eu
+      pretium quis, posuere et velit.
+    </Typography>
+  </>
+);
 
 const Page = () => {
   const classes = useStyles();
-  const [panels] = useState<IExpansionItemProps[]>([
-    { title: 'Devices', content: 'Devices Content ...', Icon: DevicesIcon },
-    {
-      title: 'Networks',
-      content: 'Networks Content ...',
-      Icon: NetworkWifiIcon,
-    },
-    { title: 'Storage', content: 'Storage Content ...', Icon: StorageIcon },
-    {
-      title: 'Pricing',
-      content: 'Pricing Content ...',
-      Icon: AttachMoneyIcon,
-    },
-    { title: 'Usage', content: 'Usage Content ...', Icon: ShowChartIcon },
-    {
-      title: 'Licensing',
-      content: 'Licensing Content ...',
-      Icon: BeenhereIcon,
-    },
-  ]);
-  const [expandedIndex, setExpandedIndex] = useState(-1);
-  const onChangeExpandedIndex = (index: number) => () =>
-    setExpandedIndex(index === expandedIndex ? -1 : index);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toolbar = (
     <Toolbar>
@@ -127,28 +131,30 @@ const Page = () => {
       <Grid container className={classes.container}>
         <Grid item sm={12}>
           <Paper square className={classes.content}>
-            <Typography variant="h5">Choose One</Typography>
-            <Divider />
-            <div className={classes.pt2}>
-              {panels
-                .filter(({ hidden }) => !hidden)
-                .map(({ title, content, Icon, disabled }, index) => (
-                  <ExpansionPanel
-                    key={index}
-                    disabled={disabled}
-                    expanded={index === expandedIndex}
-                    onChange={onChangeExpandedIndex(index)}
-                  >
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                      <Icon />
-                      <Typography variant="subtitle1">{title}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      <Typography>{content}</Typography>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                ))}
-            </div>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                First
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails className={classes.panelDetails}>
+                <Lorem />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                Second
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails className={classes.panelDetails}>
+                <Lorem />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                Third
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails className={classes.panelDetails}>
+                <Lorem />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           </Paper>
         </Grid>
       </Grid>
