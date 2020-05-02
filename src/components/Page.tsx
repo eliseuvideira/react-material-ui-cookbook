@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
-  Tabs,
-  Tab,
   Toolbar,
   IconButton,
   Typography,
@@ -18,9 +16,9 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
-import SearchIcon from '@material-ui/icons/Search';
-import SettingsIcon from '@material-ui/icons/Settings';
 import Scrollbars from 'react-custom-scrollbars';
+import TabContainer from './TabContainer';
+import TabContent from './TabContent';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,36 +31,14 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: 250,
   },
+  padding3: {
+    padding: theme.spacing(3),
+  },
 }));
 
 const Page = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [tabs, setTabs] = useState([
-    {
-      active: true,
-      label: 'Home',
-      content: 'Home Content',
-      icon: <HomeIcon />,
-    },
-    {
-      active: false,
-      label: 'Search',
-      content: 'Search Content',
-      icon: <SearchIcon />,
-      disabled: true,
-    },
-    {
-      active: false,
-      label: 'Settings',
-      content: 'Settings Content',
-      icon: <SettingsIcon />,
-    },
-  ]);
-  const onChange = (_: any, tabIndex: any) => {
-    setTabs(tabs.map((tab, index) => ({ ...tab, active: tabIndex === index })));
-  };
-  const activeTabIndex = tabs.findIndex((tab) => tab.active);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -96,19 +72,23 @@ const Page = () => {
       <Grid container>
         <Grid item xs={6}>
           <Paper square>
-            <Tabs value={activeTabIndex} onChange={onChange}>
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.label}
-                  label={tab.label}
-                  icon={tab.icon}
-                  disabled={tab.disabled}
-                />
-              ))}
-            </Tabs>
-            <Typography component="div" className={classes.tabContent}>
-              {tabs[activeTabIndex].content}
-            </Typography>
+            <TabContainer variant="fullWidth">
+              <TabContent label="Item 1" className={classes.padding3}>
+                <Paper square>
+                  <Typography>Item 1</Typography>
+                </Paper>
+              </TabContent>
+              <TabContent label="Item 2" className={classes.padding3}>
+                <Paper square>
+                  <Typography>Item 2</Typography>
+                </Paper>
+              </TabContent>
+              <TabContent label="Item 3" className={classes.padding3}>
+                <Paper square>
+                  <Typography>Item 3</Typography>
+                </Paper>
+              </TabContent>
+            </TabContainer>
           </Paper>
         </Grid>
       </Grid>
