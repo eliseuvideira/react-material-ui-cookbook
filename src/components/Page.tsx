@@ -13,12 +13,13 @@ import {
   ListItem,
   Paper,
   CssBaseline,
+  Tabs,
+  Tab,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import Scrollbars from 'react-custom-scrollbars';
-import TabContainer from './TabContainer';
-import TabContent from './TabContent';
+import { Link, BrowserRouter, Route } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const Page = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -57,41 +59,61 @@ const Page = () => {
       >
         <List>
           <Scrollbars style={{ width: 250, height: 'calc(100vh - 16px)' }}>
-            {new Array(30).fill(null).map((_, i) => (
-              <ListItem key={i} button onClick={() => setDrawerOpen(false)}>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText>Home</ListItemText>
-              </ListItem>
-            ))}
+            <ListItem button onClick={() => setDrawerOpen(false)}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText>Home</ListItemText>
+            </ListItem>
           </Scrollbars>
         </List>
       </Drawer>
       <Toolbar />
-      <Grid container>
-        <Grid item xs={6}>
-          <Paper square>
-            <TabContainer variant="fullWidth">
-              <TabContent label="Item 1" className={classes.padding3}>
-                <Paper square>
-                  <Typography>Item 1</Typography>
-                </Paper>
-              </TabContent>
-              <TabContent label="Item 2" className={classes.padding3}>
-                <Paper square>
-                  <Typography>Item 2</Typography>
-                </Paper>
-              </TabContent>
-              <TabContent label="Item 3" className={classes.padding3}>
-                <Paper square>
-                  <Typography>Item 3</Typography>
-                </Paper>
-              </TabContent>
-            </TabContainer>
-          </Paper>
+      <BrowserRouter>
+        <Grid container>
+          <Grid item xs={6} className={classes.padding3}>
+            <Paper square>
+              <AppBar position="static" color="transparent">
+                <Tabs
+                  value={tabIndex}
+                  onChange={(_, index) => setTabIndex(index)}
+                >
+                  <Tab label="Home" component={Link} to="/" />
+                  <Tab label="Users" component={Link} to="/users" />
+                  <Tab label="Settings" component={Link} to="/settings" />
+                </Tabs>
+              </AppBar>
+              <Route
+                exact
+                path="/"
+                render={() => (
+                  <Typography component="div" className={classes.tabContent}>
+                    Home
+                  </Typography>
+                )}
+              />
+              <Route
+                exact
+                path="/users"
+                render={() => (
+                  <Typography component="div" className={classes.tabContent}>
+                    Users
+                  </Typography>
+                )}
+              />
+              <Route
+                exact
+                path="/settings"
+                render={() => (
+                  <Typography component="div" className={classes.tabContent}>
+                    Settings
+                  </Typography>
+                )}
+              />
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      </BrowserRouter>
     </div>
   );
 };
