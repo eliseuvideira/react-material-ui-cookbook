@@ -8,6 +8,12 @@ import {
   CssBaseline,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import DevicesIcon from '@material-ui/icons/Devices';
+import NetworkWifiIcon from '@material-ui/icons/NetworkWifi';
+import StorageIcon from '@material-ui/icons/Storage';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
+import BeenhereIcon from '@material-ui/icons/Beenhere';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,26 +24,40 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  icon: {
+    marginRight: theme.spacing(1),
+  },
 }));
+
+interface IExpansionItemProps {
+  title: string;
+  content: string;
+  disabled?: boolean;
+  hidden?: boolean;
+  Icon: React.FC<any>;
+}
 
 const Page = () => {
   const classes = useStyles();
-  const [panels] = useState([
-    { title: 'First Panel Title', content: 'First Panel Content' },
+  const [panels] = useState<IExpansionItemProps[]>([
+    { title: 'Devices', content: 'Devices Content ...', Icon: DevicesIcon },
     {
-      title: 'Second Panel Title',
-      content: 'Second Panel Content',
-      hidden: true,
+      title: 'Networks',
+      content: 'Networks Content ...',
+      Icon: NetworkWifiIcon,
     },
+    { title: 'Storage', content: 'Storage Content ...', Icon: StorageIcon },
     {
-      title: 'Third Panel Title',
-      content: 'Third Panel Content',
-      disabled: true,
+      title: 'Pricing',
+      content: 'Pricing Content ...',
+      Icon: AttachMoneyIcon,
     },
-    { title: 'Fourth Panel Title', content: 'Fourth Panel Content' },
-    { title: 'Fifth Panel Title', content: 'Fifth Panel Content' },
-    { title: 'Sixth Panel Title', content: 'Sixth Panel Content' },
-    { title: 'Seventh Panel Title', content: 'Seventh Panel Content' },
+    { title: 'Usage', content: 'Usage Content ...', Icon: ShowChartIcon },
+    {
+      title: 'Licensing',
+      content: 'Licensing Content ...',
+      Icon: BeenhereIcon,
+    },
   ]);
   const [expandedIndex, setExpandedIndex] = useState(-1);
   const onChangeExpandedIndex = (index: number) => () =>
@@ -46,19 +66,20 @@ const Page = () => {
     <div className={classes.root}>
       <CssBaseline />
       {panels
-        .filter((panel) => !panel.hidden)
-        .map((panel, index) => (
+        .filter(({ hidden }) => !hidden)
+        .map(({ title, content, Icon, disabled }, index) => (
           <ExpansionPanel
             key={index}
-            disabled={panel.disabled}
+            disabled={disabled}
             expanded={index === expandedIndex}
             onChange={onChangeExpandedIndex(index)}
           >
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>{panel.title}</Typography>
+              <Icon className={classes.icon} />
+              <Typography variant="subtitle1">{title}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>{panel.content}</Typography>
+              <Typography>{content}</Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         ))}
