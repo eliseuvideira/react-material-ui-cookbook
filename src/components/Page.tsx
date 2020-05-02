@@ -20,6 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
 import SettingsIcon from '@material-ui/icons/Settings';
+import Scrollbars from 'react-custom-scrollbars';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,12 +80,16 @@ const Page = () => {
         onClose={() => setDrawerOpen(false)}
       >
         <List>
-          <ListItem button onClick={() => setDrawerOpen(false)}>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText>Home</ListItemText>
-          </ListItem>
+          <Scrollbars style={{ width: 250, height: 'calc(100vh - 16px)' }}>
+            {new Array(30).fill(null).map((_, i) => (
+              <ListItem key={i} button onClick={() => setDrawerOpen(false)}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText>Home</ListItemText>
+              </ListItem>
+            ))}
+          </Scrollbars>
         </List>
       </Drawer>
       <Toolbar />
