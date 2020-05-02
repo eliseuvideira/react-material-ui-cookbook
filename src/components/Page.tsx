@@ -7,10 +7,14 @@ import {
   ListItemText,
   List,
   ListItemIcon,
+  Avatar,
 } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PropTypes from 'prop-types';
+import MarkunreadIcon from '@material-ui/icons/Markunread';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import LowPriorityIcon from '@material-ui/icons/LowPriority';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,17 +34,29 @@ MaybeSelectedIcon.propTypes = {
 
 const Page = () => {
   const classes = useStyles();
-  const [users, setUsers] = useState([
-    { name: 'John Doe', selected: false },
-    { name: 'Joseph Smith', selected: false },
-    { name: 'Janice Patterson', selected: false },
+  const [items] = useState([
+    {
+      name: 'Unread',
+      updated: '2 minutes ago',
+      Icon: MarkunreadIcon,
+      notifications: 1,
+    },
+    {
+      name: 'High Priority',
+      updated: '30 minutes ago',
+      Icon: PriorityHighIcon,
+    },
+    {
+      name: 'Low Priority',
+      updated: '3 hours ago',
+      Icon: LowPriorityIcon,
+    },
+    {
+      name: 'Junk',
+      updated: '6 days ago',
+      Icon: DeleteIcon,
+    },
   ]);
-
-  const onClick = (index: number) => () => {
-    const items = [...users];
-    items[index] = { ...items[index], selected: !items[index].selected };
-    setUsers(items);
-  };
 
   return (
     <div className={classes.root}>
@@ -48,20 +64,14 @@ const Page = () => {
       <Grid container spacing={4}>
         <Grid item xs={6}>
           <List>
-            {users.map((user, index) => (
-              <ListItem
-                key={index}
-                button
-                selected={user.selected}
-                onClick={onClick(index)}
-              >
-                <ListItemText primary={user.name} />
+            {items.map(({ Icon, name, updated }, index) => (
+              <ListItem key={index} button>
                 <ListItemIcon>
-                  <MaybeSelectedIcon
-                    selected={user.selected}
-                    Icon={() => <AccountCircleIcon />}
-                  />
+                  <Avatar>
+                    <Icon />
+                  </Avatar>
                 </ListItemIcon>
+                <ListItemText primary={name} secondary={updated} />
               </ListItem>
             ))}
           </List>
