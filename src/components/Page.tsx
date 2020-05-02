@@ -77,6 +77,7 @@ const Page = () => {
                     <Badge
                       color={notifications ? 'secondary' : undefined}
                       badgeContent={notifications}
+                      overlap="circle"
                     >
                       <Avatar
                         className={clsx({
