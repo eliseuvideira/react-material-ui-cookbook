@@ -61,7 +61,11 @@ const Page = () => {
           <Typography variant="h6">{process.env.APP_NAME}</Typography>
         </Toolbar>
       </AppBar>
-      <Drawer open={drawerOpen} classes={{ paper: classes.drawerPaper }}>
+      <Drawer
+        open={drawerOpen}
+        classes={{ paper: classes.drawerPaper }}
+        onClose={() => setDrawerOpen(false)}
+      >
         <List>
           <ListItem button onClick={() => setDrawerOpen(false)}>
             <ListItemIcon>
