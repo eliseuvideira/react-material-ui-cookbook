@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import {
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+  CssBaseline,
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,22 +22,35 @@ const useStyles = makeStyles((theme) => ({
 
 const Page = () => {
   const classes = useStyles();
+  const [panels] = useState([
+    { title: 'First Panel Title', content: 'First Panel Content' },
+    {
+      title: 'Second Panel Title',
+      content: 'Second Panel Content',
+      hidden: true,
+    },
+    {
+      title: 'Third Panel Title',
+      content: 'Third Panel Content',
+      disabled: true,
+    },
+    { title: 'Fourth Panel Title', content: 'Fourth Panel Content' },
+  ]);
   return (
     <div className={classes.root}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
-        </Grid>
-      </Grid>
+      <CssBaseline />
+      {panels
+        .filter((panel) => !panel.hidden)
+        .map((panel, index) => (
+          <ExpansionPanel key={index} disabled={panel.disabled}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>{panel.title}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>{panel.content}</Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        ))}
     </div>
   );
 };
