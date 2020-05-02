@@ -1,134 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Grid,
-  ListItemIcon,
-  ListItemText,
-  List,
-  Drawer,
-  ListItem,
-  Paper,
-  CssBaseline,
-  Tabs,
-  Tab,
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import HomeIcon from '@material-ui/icons/Home';
-import Scrollbars from 'react-custom-scrollbars';
-import { Link, BrowserRouter, Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
   },
-  tabContent: {
+  paper: {
     padding: theme.spacing(2),
-  },
-  drawerPaper: {
-    width: 250,
-  },
-  padding3: {
-    padding: theme.spacing(3),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
   },
 }));
 
-const TabContainer: React.FC<{ value: number }> = ({ value }) => {
-  return (
-    <AppBar position="static" color="transparent">
-      <Tabs value={value}>
-        <Tab label="Home" component={Link} to="/" />
-        <Tab label="Users" component={Link} to="/users" />
-        <Tab label="Settings" component={Link} to="/settings" />
-      </Tabs>
-    </AppBar>
-  );
-};
-
-TabContainer.propTypes = {
-  value: PropTypes.number.isRequired,
-};
-
 const Page = () => {
   const classes = useStyles();
-  const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton color="inherit" onClick={() => setDrawerOpen(true)}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6">{process.env.APP_NAME}</Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        open={drawerOpen}
-        classes={{ paper: classes.drawerPaper }}
-        onClose={() => setDrawerOpen(false)}
-      >
-        <List>
-          <Scrollbars style={{ width: 250, height: 'calc(100vh - 16px)' }}>
-            <ListItem button onClick={() => setDrawerOpen(false)}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText>Home</ListItemText>
-            </ListItem>
-          </Scrollbars>
-        </List>
-      </Drawer>
-      <Toolbar />
-      <BrowserRouter>
-        <Grid container>
-          <Grid item xs={6} className={classes.padding3}>
-            <Paper square>
-              <Route
-                exact
-                path="/"
-                render={() => (
-                  <>
-                    <TabContainer value={0} />
-                    <Typography component="div" className={classes.tabContent}>
-                      Home
-                    </Typography>
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path="/users"
-                render={() => (
-                  <>
-                    <TabContainer value={1} />
-                    <Typography component="div" className={classes.tabContent}>
-                      Users
-                    </Typography>
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path="/settings"
-                render={() => (
-                  <>
-                    <TabContainer value={2} />
-                    <Typography component="div" className={classes.tabContent}>
-                      Settings
-                    </Typography>
-                  </>
-                )}
-              />
-            </Paper>
-          </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
         </Grid>
-      </BrowserRouter>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper className={classes.paper}>xs=12 sm=6 md=3</Paper>
+        </Grid>
+      </Grid>
     </div>
   );
 };
