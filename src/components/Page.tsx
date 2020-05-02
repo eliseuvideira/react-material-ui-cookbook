@@ -13,13 +13,13 @@ import {
   List,
   Drawer,
   ListItem,
-  useTheme,
-  useMediaQuery,
   Paper,
   CssBaseline,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
+import SearchIcon from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,22 +34,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const useWidth = () => {
-  const theme = useTheme();
-  const keys = [...theme.breakpoints.keys].reverse();
-  return (
-    keys.reduce((output, key) => {
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return !output && matches ? key : output;
-    }, null as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | null) || 'xs'
-  );
-};
-
 const Page = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [currentTab, setCurrentTab] = useState(0);
-  const width = useWidth();
+  const [tabs, setTabs] = useState([
+    {
+      active: true,
+      label: 'Home',
+      content: 'Home Content',
+      icon: <HomeIcon />,
+    },
+    {
+      active: false,
+      label: 'Search',
+      content: 'Search Content',
+      icon: <SearchIcon />,
+      disabled: true,
+    },
+    {
+      active: false,
+      label: 'Settings',
+      content: 'Settings Content',
+      icon: <SettingsIcon />,
+    },
+  ]);
+  const onChange = (_: any, tabIndex: any) => {
+    setTabs(tabs.map((tab, index) => ({ ...tab, active: tabIndex === index })));
+  };
+  const activeTabIndex = tabs.findIndex((tab) => tab.active);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -79,33 +91,19 @@ const Page = () => {
       <Grid container>
         <Grid item xs={6}>
           <Paper square>
-            <Tabs
-              variant={
-                ['xs', 'sm'].includes(width) ? 'scrollable' : 'fullWidth'
-              }
-              value={currentTab}
-              scrollButtons="auto"
-              onChange={(_, value) => setCurrentTab(value)}
-            >
-              <Tab label="Details" />
-              <Tab label="Privileges" />
-              <Tab label="Settings" />
+            <Tabs value={activeTabIndex} onChange={onChange}>
+              {tabs.map((tab) => (
+                <Tab
+                  key={tab.label}
+                  label={tab.label}
+                  icon={tab.icon}
+                  disabled={tab.disabled}
+                />
+              ))}
             </Tabs>
-            {currentTab === 0 && (
-              <Typography component="div" className={classes.tabContent}>
-                Details
-              </Typography>
-            )}
-            {currentTab === 1 && (
-              <Typography component="div" className={classes.tabContent}>
-                Privileges
-              </Typography>
-            )}
-            {currentTab === 2 && (
-              <Typography component="div" className={classes.tabContent}>
-                Settings
-              </Typography>
-            )}
+            <Typography component="div" className={classes.tabContent}>
+              {tabs[activeTabIndex].content}
+            </Typography>
           </Paper>
         </Grid>
       </Grid>
