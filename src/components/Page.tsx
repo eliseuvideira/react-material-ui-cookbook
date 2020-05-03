@@ -1,72 +1,75 @@
-/* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import {
-  CssBaseline,
-  ListItem,
-  ListItemText,
-  List,
-  Container,
-  Paper,
-} from '@material-ui/core';
-import { AutoSizer, List as VirtualList } from 'react-virtualized';
+import Paper, { PaperProps } from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import { CssBaseline } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  list: {
-    height: 300,
-  },
   paper: {
-    margin: theme.spacing(3),
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
   },
 }));
 
+const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
+  children,
+  elevation: propsElevation,
+  ...props
+}) => {
+  const [elevation, setElevation] = useState(propsElevation);
+  return (
+    <Paper
+      {...props}
+      elevation={elevation}
+      onMouseEnter={() => setElevation(5)}
+      onMouseLeave={() => setElevation(1)}
+    >
+      {children}
+    </Paper>
+  );
+};
+
+HighlightPaper.defaultProps = {
+  elevation: 1,
+};
+
+HighlightPaper.propTypes = {
+  children: PropTypes.any.isRequired,
+  elevation: PropTypes.number,
+};
+
 const Page = () => {
   const classes = useStyles();
-  const [items] = useState(
-    new Array(1000).fill(null).map((_, i) => `Item ${i + 1}`),
-  );
-  const rowRenderer: (props: any) => any = ({
-    index,
-    isScrolling,
-    key,
-    style,
-  }) => {
-    const item = items[index];
-    return (
-      <ListItem button key={key} style={style}>
-        <ListItemText primary={isScrolling ? '...' : item} />
-      </ListItem>
-    );
-  };
-
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Container maxWidth="lg" disableGutters>
-        <Grid container>
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <List className={classes.list} disablePadding>
-                <AutoSizer disableHeight>
-                  {({ width }) => (
-                    <VirtualList
-                      width={width}
-                      height={300}
-                      rowHeight={50}
-                      rowCount={items.length}
-                      rowRenderer={rowRenderer}
-                    />
-                  )}
-                </AutoSizer>
-              </List>
-            </Paper>
-          </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
         </Grid>
-      </Container>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
+        </Grid>
+      </Grid>
     </div>
   );
 };
