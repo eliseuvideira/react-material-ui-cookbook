@@ -7,7 +7,7 @@ import {
   ListItemText,
   List,
   Container,
-  Divider,
+  Typography,
 } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -25,6 +25,7 @@ const Page = () => {
       <Container maxWidth="lg" disableGutters>
         <Grid container>
           <Grid item xs={12}>
+            <Typography variant="h6">First Section</Typography>
             <List dense>
               <ListItem>
                 <ListItemText primary="First" />
@@ -33,7 +34,7 @@ const Page = () => {
                 <ListItemText primary="Second" />
               </ListItem>
             </List>
-            <Divider />
+            <Typography variant="h6">Second Section</Typography>
             <List dense>
               <ListItem>
                 <ListItemText primary="First" />
@@ -42,7 +43,7 @@ const Page = () => {
                 <ListItemText primary="Second" />
               </ListItem>
             </List>
-            <Divider />
+            <Typography variant="h6">Third Section</Typography>
             <List dense>
               <ListItem>
                 <ListItemText primary="First" />
