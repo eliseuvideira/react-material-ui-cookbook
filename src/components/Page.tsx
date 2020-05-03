@@ -8,15 +8,13 @@ import {
   List,
   Container,
   ListItemIcon,
-  Collapse,
+  ListItemSecondaryAction,
+  IconButton,
 } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/Inbox';
-import MailIcon from '@material-ui/icons/Mail';
-import ContactsIcon from '@material-ui/icons/Contacts';
-import ContactMailIcon from '@material-ui/icons/ContactMail';
 import PropTypes from 'prop-types';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import BluetoothIcon from '@material-ui/icons/Bluetooth';
+import BluetoothDisabledIcon from '@material-ui/icons/BluetoothDisabled';
+import DevicesIcon from '@material-ui/icons/Devices';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,43 +25,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExpandIcon: React.FC<{ expanded: boolean }> = ({ expanded }) =>
-  expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />;
+const MaybeBluetoothIcon: React.FC<{ bluetooth: boolean }> = ({ bluetooth }) =>
+  bluetooth ? <BluetoothIcon /> : <BluetoothDisabledIcon />;
 
-ExpandIcon.propTypes = {
-  expanded: PropTypes.bool.isRequired,
+MaybeBluetoothIcon.propTypes = {
+  bluetooth: PropTypes.bool.isRequired,
 };
 
 const Page = () => {
   const classes = useStyles();
-  const [items, setItems] = useState([
+  const [devices, setDevices] = useState([
     {
-      name: 'Messages',
-      Icon: InboxIcon,
-      expanded: false,
-      children: [
-        { name: 'First Message', Icon: MailIcon },
-        { name: 'Second Message', Icon: MailIcon },
-      ],
+      name: 'Device 1',
+      bluetooth: false,
     },
     {
-      name: 'Contacts',
-      Icon: ContactsIcon,
-      expanded: false,
-      children: [
-        { name: 'First Contact', Icon: ContactMailIcon },
-        { name: 'Second Contact', Icon: ContactMailIcon },
-      ],
+      name: 'Device 2',
+      bluetooth: true,
+    },
+    {
+      name: 'Device 3',
+      bluetooth: true,
     },
   ]);
 
   const onClick = (index: number) => () => {
-    const newItems = [...items];
-    newItems[index] = {
-      ...newItems[index],
-      expanded: !newItems[index].expanded,
+    const newDevices = [...devices];
+    newDevices[index] = {
+      ...newDevices[index],
+      bluetooth: !newDevices[index].bluetooth,
     };
-    setItems(newItems);
+    setDevices(newDevices);
   };
 
   return (
@@ -73,31 +65,18 @@ const Page = () => {
         <Grid container>
           <Grid item xs={12}>
             <List>
-              {items.map((item, index) => (
-                <>
-                  <ListItem button onClick={onClick(index)}>
-                    <ListItemIcon>
-                      <item.Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={item.name} />
-                    <ExpandIcon expanded={item.expanded} />
-                  </ListItem>
-                  <Collapse in={item.expanded}>
-                    {item.children.map((child) => (
-                      <ListItem
-                        key={child.name}
-                        button
-                        dense
-                        className={classes.subItem}
-                      >
-                        <ListItemIcon>
-                          <child.Icon />
-                        </ListItemIcon>
-                        <ListItemText primary={child.name} />
-                      </ListItem>
-                    ))}
-                  </Collapse>
-                </>
+              {devices.map((device, index) => (
+                <ListItem key={index} button>
+                  <ListItemIcon>
+                    <DevicesIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={device.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton onClick={onClick(index)}>
+                      <MaybeBluetoothIcon bluetooth={device.bluetooth} />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
               ))}
             </List>
           </Grid>
