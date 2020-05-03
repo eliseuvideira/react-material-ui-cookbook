@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import BluetoothIcon from '@material-ui/icons/Bluetooth';
 import BluetoothDisabledIcon from '@material-ui/icons/BluetoothDisabled';
 import DevicesIcon from '@material-ui/icons/Devices';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,8 +26,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MaybeBluetoothIcon: React.FC<{ bluetooth: boolean }> = ({ bluetooth }) =>
-  bluetooth ? <BluetoothIcon /> : <BluetoothDisabledIcon />;
+const MaybeBluetoothIcon: React.FC<{
+  bluetooth: boolean;
+  [key: string]: any;
+}> = ({ bluetooth, ...props }) =>
+  bluetooth ? (
+    <BluetoothIcon {...props} />
+  ) : (
+    <BluetoothDisabledIcon {...props} />
+  );
 
 MaybeBluetoothIcon.propTypes = {
   bluetooth: PropTypes.bool.isRequired,
@@ -38,22 +46,25 @@ const Page = () => {
     {
       name: 'Device 1',
       bluetooth: false,
+      power: true,
     },
     {
       name: 'Device 2',
       bluetooth: true,
+      power: true,
     },
     {
       name: 'Device 3',
       bluetooth: true,
+      power: true,
     },
   ]);
 
-  const onClick = (index: number) => () => {
+  const onToggle = (index: number, prop: 'bluetooth' | 'power') => () => {
     const newDevices = [...devices];
     newDevices[index] = {
       ...newDevices[index],
-      bluetooth: !newDevices[index].bluetooth,
+      [prop]: !newDevices[index][prop],
     };
     setDevices(newDevices);
   };
@@ -72,8 +83,16 @@ const Page = () => {
                   </ListItemIcon>
                   <ListItemText primary={device.name} />
                   <ListItemSecondaryAction>
-                    <IconButton onClick={onClick(index)}>
-                      <MaybeBluetoothIcon bluetooth={device.bluetooth} />
+                    <IconButton onClick={onToggle(index, 'bluetooth')}>
+                      <MaybeBluetoothIcon
+                        bluetooth={device.bluetooth}
+                        color={device.bluetooth ? 'primary' : undefined}
+                      />
+                    </IconButton>
+                    <IconButton onClick={onToggle(index, 'power')}>
+                      <PowerSettingsNewIcon
+                        color={device.power ? 'primary' : undefined}
+                      />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
