@@ -18,11 +18,14 @@ import PropTypes from 'prop-types';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-});
+  subItem: {
+    paddingLeft: theme.spacing(3),
+  },
+}));
 
 const ExpandIcon: React.FC<{ expanded: boolean }> = ({ expanded }) =>
   expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />;
@@ -81,7 +84,12 @@ const Page = () => {
                   </ListItem>
                   <Collapse in={item.expanded}>
                     {item.children.map((child) => (
-                      <ListItem key={child.name} button dense>
+                      <ListItem
+                        key={child.name}
+                        button
+                        dense
+                        className={classes.subItem}
+                      >
                         <ListItemIcon>
                           <child.Icon />
                         </ListItemIcon>
