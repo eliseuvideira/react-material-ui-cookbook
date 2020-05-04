@@ -44,7 +44,7 @@ const Page = () => {
       order?: 'asc' | 'desc';
     }[]
   >([
-    { name: 'Name', active: true },
+    { name: 'Name', active: false },
     { name: 'Created', active: false },
     { name: 'High', active: false, numeric: true },
     { name: 'Low', active: false, numeric: true },
