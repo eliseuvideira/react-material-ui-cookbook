@@ -10,7 +10,9 @@ import {
   TableCell,
   TableBody,
   Container,
+  CircularProgress,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,8 +20,22 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     margin: theme.spacing(2),
+    textAlign: 'center',
   },
 }));
+
+const useProgressStyles = makeStyles((theme) => ({
+  progress: { margin: theme.spacing(2) },
+}));
+
+const MaybeLoading: React.FC<{ loading?: boolean }> = ({ loading }) => {
+  const classes = useProgressStyles();
+  return loading ? <CircularProgress className={classes.progress} /> : null;
+};
+
+MaybeLoading.propTypes = {
+  loading: PropTypes.bool,
+};
 
 const fetchData = () => {
   const items = [
@@ -72,8 +88,12 @@ const fetchData = () => {
 const Page = () => {
   const classes = useStyles();
   const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetchData().then((items: any[]) => setItems(items));
+    fetchData().then((items: any[]) => {
+      setItems(items);
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -107,6 +127,7 @@ const Page = () => {
                   ))}
                 </TableBody>
               </Table>
+              <MaybeLoading loading={loading} />
             </Paper>
           </Grid>
         </Grid>
