@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
@@ -6,13 +6,12 @@ import {
   Paper,
   Table,
   TableHead,
-  TableRow,
-  TableCell,
   TableBody,
   Container,
-  CircularProgress,
+  TableCell,
+  TableSortLabel,
+  TableRow,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,21 +23,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const useProgressStyles = makeStyles((theme) => ({
-  progress: { margin: theme.spacing(2) },
-}));
-
-const MaybeLoading: React.FC<{ loading?: boolean }> = ({ loading }) => {
-  const classes = useProgressStyles();
-  return loading ? <CircularProgress className={classes.progress} /> : null;
+const sort = (prop: string, desc = true) => (a: any, b: any) => {
+  const order = desc ? -1 : 1;
+  if (a[prop] < b[prop]) {
+    return -1 * order;
+  }
+  if (a[prop] > b[prop]) {
+    return 1 * order;
+  }
+  return 0;
 };
 
-MaybeLoading.propTypes = {
-  loading: PropTypes.bool,
-};
-
-const fetchData = () => {
-  const items = [
+const Page = () => {
+  const classes = useStyles();
+  const [columns, setColumns] = useState<
+    {
+      name: string;
+      active: boolean;
+      numeric?: boolean;
+      order?: 'asc' | 'desc';
+    }[]
+  >([
+    { name: 'Name', active: true },
+    { name: 'Created', active: false },
+    { name: 'High', active: false, numeric: true },
+    { name: 'Low', active: false, numeric: true },
+    { name: 'Average', active: false, numeric: true },
+  ]);
+  const [rows, setRows] = useState([
     {
       id: 1,
       name: 'First Item',
@@ -79,22 +91,27 @@ const fetchData = () => {
       low: 879,
       average: 930,
     },
-  ];
-  return new Promise<any[]>((resolve) => {
-    setTimeout(() => resolve(items), 1000);
-  });
-};
+  ]);
 
-const Page = () => {
-  const classes = useStyles();
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetchData().then((items: any[]) => {
-      setItems(items);
-      setLoading(false);
-    });
-  }, []);
+  const onSortClick = (index: number) => () => {
+    setColumns(
+      columns.map((column, i) => ({
+        ...column,
+        active: index === i,
+        order:
+          (index === i && column.order === 'desc' ? 'asc' : 'desc') ||
+          undefined,
+      })),
+    );
+    setRows(
+      [...rows].sort(
+        sort(
+          columns[index].name.toLowerCase(),
+          columns[index].order === 'desc',
+        ),
+      ),
+    );
+  };
 
   return (
     <div className={classes.root}>
@@ -106,28 +123,36 @@ const Page = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Created</TableCell>
-                    <TableCell align="right">High</TableCell>
-                    <TableCell align="right">Low</TableCell>
-                    <TableCell align="right">Average</TableCell>
+                    {columns.map((column, index) => (
+                      <TableCell
+                        key={column.name}
+                        align={column.numeric ? 'right' : 'inherit'}
+                      >
+                        <TableSortLabel
+                          active={column.active}
+                          direction={column.order}
+                          onClick={onSortClick(index)}
+                        >
+                          {column.name}
+                        </TableSortLabel>
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {items.map(({ id, name, created, high, low, average }) => (
-                    <TableRow key={id}>
+                  {rows.map((row) => (
+                    <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                        {name}
+                        {row.name}
                       </TableCell>
-                      <TableCell>{created.toLocaleString()}</TableCell>
-                      <TableCell align="right">{high}</TableCell>
-                      <TableCell align="right">{low}</TableCell>
-                      <TableCell align="right">{average}</TableCell>
+                      <TableCell>{row.created.toLocaleString()}</TableCell>
+                      <TableCell align="right">{row.high}</TableCell>
+                      <TableCell align="right">{row.low}</TableCell>
+                      <TableCell align="right">{row.average}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              <MaybeLoading loading={loading} />
             </Paper>
           </Grid>
         </Grid>
