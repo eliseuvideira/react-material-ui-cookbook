@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
@@ -9,9 +9,13 @@ import {
   TableBody,
   Container,
   TableCell,
-  TableSortLabel,
   TableRow,
+  CircularProgress,
+  InputAdornment,
+  TextField,
 } from '@material-ui/core';
+import PropTypes from '../PropTypes';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,96 +25,57 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     textAlign: 'center',
   },
+  progress: {
+    margin: theme.spacing(2),
+  },
+  search: {
+    marginLeft: theme.spacing(2),
+  },
 }));
 
-const sort = (prop: string, desc = true) => (a: any, b: any) => {
-  const order = desc ? -1 : 1;
-  if (a[prop] < b[prop]) {
-    return -1 * order;
-  }
-  if (a[prop] > b[prop]) {
-    return 1 * order;
-  }
-  return 0;
+const MaybeLoading: React.FC<{ loading?: boolean }> = ({ loading }) => {
+  const classes = useStyles();
+  return loading ? <CircularProgress className={classes.progress} /> : null;
+};
+
+MaybeLoading.propTypes = {
+  loading: PropTypes.bool,
+};
+
+const fetchData = () => {
+  const items = new Array(100).fill(null).map((_, i) => {
+    const id = i + 1;
+    const high = Math.floor(Math.random() * 2000);
+    const low = high - Math.floor(Math.random() * 20);
+    return {
+      id,
+      name: `${id} Item`,
+      created: new Date(),
+      high,
+      low,
+      average: (high + low) / 2,
+    };
+  });
+  return new Promise<any[]>((resolve) => {
+    setTimeout(() => resolve(items), 500 + Math.floor(Math.random() * 1000));
+  });
 };
 
 const Page = () => {
   const classes = useStyles();
-  const [columns, setColumns] = useState<
-    {
-      name: string;
-      active: boolean;
-      numeric?: boolean;
-      order?: 'asc' | 'desc';
-    }[]
-  >([
-    { name: 'Name', active: false },
-    { name: 'Created', active: false },
-    { name: 'High', active: false, numeric: true },
-    { name: 'Low', active: false, numeric: true },
-    { name: 'Average', active: false, numeric: true },
-  ]);
-  const [rows, setRows] = useState([
-    {
-      id: 1,
-      name: 'First Item',
-      created: new Date(),
-      high: 2935,
-      low: 1924,
-      average: 2429.5,
-    },
-    {
-      id: 2,
-      name: 'Second Item',
-      created: new Date(),
-      high: 439,
-      low: 231,
-      average: 335,
-    },
-    {
-      id: 3,
-      name: 'Third Item',
-      created: new Date(),
-      high: 8239,
-      low: 5629,
-      average: 6934,
-    },
-    {
-      id: 4,
-      name: 'Fourth Item',
-      created: new Date(),
-      high: 3203,
-      low: 3127,
-      average: 3165,
-    },
-    {
-      id: 5,
-      name: 'Fifth Item',
-      created: new Date(),
-      high: 981,
-      low: 879,
-      average: 930,
-    },
-  ]);
+  const [search, setSearch] = useState<string>('');
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const onSortClick = (index: number) => () => {
-    setColumns(
-      columns.map((column, i) => ({
-        ...column,
-        active: index === i,
-        order:
-          (index === i && column.order === 'desc' ? 'asc' : 'desc') ||
-          undefined,
-      })),
-    );
-    setRows(
-      [...rows].sort(
-        sort(
-          columns[index].name.toLowerCase(),
-          columns[index].order === 'desc',
-        ),
-      ),
-    );
+  useEffect(() => {
+    fetchData().then((data) => {
+      setItems(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const onSearchChange = (e: any) => {
+    setSearch(e.target.value);
   };
 
   return (
@@ -119,40 +84,47 @@ const Page = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12}>
+            <TextField
+              value={search}
+              onChange={onSearchChange}
+              className={classes.search}
+              id="input-search"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
             <Paper className={classes.paper}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    {columns.map((column, index) => (
-                      <TableCell
-                        key={column.name}
-                        align={column.numeric ? 'right' : 'inherit'}
-                      >
-                        <TableSortLabel
-                          active={column.active}
-                          direction={column.order}
-                          onClick={onSortClick(index)}
-                        >
-                          {column.name}
-                        </TableSortLabel>
-                      </TableCell>
-                    ))}
+                    <TableCell>Name</TableCell>
+                    <TableCell>Created</TableCell>
+                    <TableCell align="right">High</TableCell>
+                    <TableCell align="right">Low</TableCell>
+                    <TableCell align="right">Average</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell component="th" scope="row">
-                        {row.name}
-                      </TableCell>
-                      <TableCell>{row.created.toLocaleString()}</TableCell>
-                      <TableCell align="right">{row.high}</TableCell>
-                      <TableCell align="right">{row.low}</TableCell>
-                      <TableCell align="right">{row.average}</TableCell>
-                    </TableRow>
-                  ))}
+                  {items
+                    .filter((item) => !search || item.name.includes(search))
+                    .map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell component="th" scope="row">
+                          {item.name}
+                        </TableCell>
+                        <TableCell>{item.created.toLocaleString()}</TableCell>
+                        <TableCell align="right">{item.high}</TableCell>
+                        <TableCell align="right">{item.low}</TableCell>
+                        <TableCell align="right">{item.average}</TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
+              <MaybeLoading loading={loading} />
             </Paper>
           </Grid>
         </Grid>
