@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
@@ -10,12 +10,12 @@ import {
   Container,
   TableCell,
   TableRow,
-  CircularProgress,
-  InputAdornment,
-  TextField,
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
 } from '@material-ui/core';
 import PropTypes from '../PropTypes';
-import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,58 +25,135 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     textAlign: 'center',
   },
-  progress: {
+  card: {
     margin: theme.spacing(2),
-  },
-  search: {
-    marginLeft: theme.spacing(2),
+    maxWidth: 300,
   },
 }));
 
-const MaybeLoading: React.FC<{ loading?: boolean }> = ({ loading }) => {
+const SummaryCard: React.FC<{
+  rowsSelected: number;
+  low: number;
+  high: number;
+}> = ({ rowsSelected, low, high }) => {
   const classes = useStyles();
-  return loading ? <CircularProgress className={classes.progress} /> : null;
+  return (
+    <Card className={classes.card}>
+      <CardHeader title={`(${rowsSelected}) rows selected`} />
+      <CardContent>
+        <Grid container direction="column">
+          <Grid item>
+            <Grid container justify="space-between">
+              <Grid item>
+                <Typography>Low</Typography>
+              </Grid>
+              <Grid item>
+                <Typography>{low}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container justify="space-between">
+              <Grid item>
+                <Typography>High</Typography>
+              </Grid>
+              <Grid item>
+                <Typography>{high}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container justify="space-between">
+              <Grid item>
+                <Typography>Average</Typography>
+              </Grid>
+              <Grid item>
+                <Typography>{(high + low) / 2}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 };
 
-MaybeLoading.propTypes = {
-  loading: PropTypes.bool,
-};
-
-const fetchData = () => {
-  const items = new Array(100).fill(null).map((_, i) => {
-    const id = i + 1;
-    const high = Math.floor(Math.random() * 2000);
-    const low = high - Math.floor(Math.random() * 20);
-    return {
-      id,
-      name: `${id} Item`,
-      created: new Date(),
-      high,
-      low,
-      average: (high + low) / 2,
-    };
-  });
-  return new Promise<any[]>((resolve) => {
-    setTimeout(() => resolve(items), 500 + Math.floor(Math.random() * 1000));
-  });
+SummaryCard.propTypes = {
+  rowsSelected: PropTypes.number.isRequired,
+  high: PropTypes.number.isRequired,
+  low: PropTypes.number.isRequired,
 };
 
 const Page = () => {
   const classes = useStyles();
-  const [search, setSearch] = useState<string>('');
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [columns] = useState([
+    { name: 'Name', active: false },
+    { name: 'Created', active: false },
+    { name: 'High', active: false, numeric: true },
+    { name: 'Low', active: false, numeric: true },
+    { name: 'Average', active: false, numeric: true },
+  ]);
+  const [rows, setRows] = useState<
+    {
+      id: number;
+      name: string;
+      created: Date;
+      high: number;
+      low: number;
+      average: number;
+      selected?: boolean;
+    }[]
+  >([
+    {
+      id: 1,
+      name: 'First Item',
+      created: new Date(),
+      high: 2935,
+      low: 1924,
+      average: 2429.5,
+    },
+    {
+      id: 2,
+      name: 'Second Item',
+      created: new Date(),
+      high: 439,
+      low: 231,
+      average: 335,
+    },
+    {
+      id: 3,
+      name: 'Third Item',
+      created: new Date(),
+      high: 8239,
+      low: 5629,
+      average: 6934,
+    },
+    {
+      id: 4,
+      name: 'Fourth Item',
+      created: new Date(),
+      high: 3203,
+      low: 3127,
+      average: 3165,
+    },
+    {
+      id: 5,
+      name: 'Fifth Item',
+      created: new Date(),
+      high: 981,
+      low: 879,
+      average: 930,
+    },
+  ]);
 
-  useEffect(() => {
-    fetchData().then((data) => {
-      setItems(data);
-      setLoading(false);
-    });
-  }, []);
-
-  const onSearchChange = (e: any) => {
-    setSearch(e.target.value);
+  const onRowClick = (id: number) => () => {
+    const newRows = [...rows];
+    const index = rows.findIndex((row) => row.id === id);
+    const row = rows[index];
+    newRows[index] = { ...row, selected: !row.selected };
+    setRows(newRows);
   };
+  const selected = rows.filter((row) => row.selected);
 
   return (
     <div className={classes.root}>
@@ -84,47 +161,43 @@ const Page = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <TextField
-              value={search}
-              onChange={onSearchChange}
-              className={classes.search}
-              id="input-search"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
+            <SummaryCard
+              rowsSelected={selected.length}
+              high={selected.reduce((prev, curr) => prev + curr.high, 0)}
+              low={selected.reduce((prev, curr) => prev + curr.low, 0)}
             />
             <Paper className={classes.paper}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Created</TableCell>
-                    <TableCell align="right">High</TableCell>
-                    <TableCell align="right">Low</TableCell>
-                    <TableCell align="right">Average</TableCell>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.name}
+                        align={column.numeric ? 'right' : 'inherit'}
+                      >
+                        {column.name}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {items
-                    .filter((item) => !search || item.name.includes(search))
-                    .map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell component="th" scope="row">
-                          {item.name}
-                        </TableCell>
-                        <TableCell>{item.created.toLocaleString()}</TableCell>
-                        <TableCell align="right">{item.high}</TableCell>
-                        <TableCell align="right">{item.low}</TableCell>
-                        <TableCell align="right">{item.average}</TableCell>
-                      </TableRow>
-                    ))}
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      onClick={onRowClick(row.id)}
+                      selected={row.selected}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell>{row.created.toLocaleString()}</TableCell>
+                      <TableCell align="right">{row.high}</TableCell>
+                      <TableCell align="right">{row.low}</TableCell>
+                      <TableCell align="right">{row.average}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
-              <MaybeLoading loading={loading} />
             </Paper>
           </Grid>
         </Grid>
