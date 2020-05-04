@@ -31,27 +31,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StartButton: React.FC<{
-  status: 'running' | 'off';
   onClick: (...args: any) => any;
-}> = ({ status, onClick }) => (
-  <IconButton
-    onClick={onClick}
-    color={status === 'off' ? 'primary' : 'default'}
-    disabled={status === 'running'}
-  >
+}> = ({ onClick }) => (
+  <IconButton onClick={onClick} color="primary">
     <PlayArrowIcon fontSize="small" />
   </IconButton>
 );
 
 const StopButton: React.FC<{
-  status: 'running' | 'off';
   onClick: (...args: any) => any;
-}> = ({ status, onClick }) => (
-  <IconButton
-    onClick={onClick}
-    color={status === 'running' ? 'primary' : 'default'}
-    disabled={status === 'off'}
-  >
+}> = ({ onClick }) => (
+  <IconButton onClick={onClick} color="primary">
     <StopIcon fontSize="small" />
   </IconButton>
 );
@@ -121,14 +111,11 @@ const Page = () => {
                       </TableCell>
                       <TableCell>{row.status}</TableCell>
                       <TableCell>
-                        <StartButton
-                          status={row.status}
-                          onClick={toggleStatus(row.id)}
-                        />
-                        <StopButton
-                          status={row.status}
-                          onClick={toggleStatus(row.id)}
-                        />
+                        {row.status === 'off' ? (
+                          <StartButton onClick={toggleStatus(row.id)} />
+                        ) : (
+                          <StopButton onClick={toggleStatus(row.id)} />
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
