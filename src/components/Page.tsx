@@ -1,75 +1,116 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import { CssBaseline } from '@material-ui/core';
+import {
+  CssBaseline,
+  Grid,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Container,
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+    margin: theme.spacing(2),
   },
 }));
 
-const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
-  children,
-  elevation: propsElevation,
-  ...props
-}) => {
-  const [elevation, setElevation] = useState(propsElevation);
-  return (
-    <Paper
-      {...props}
-      elevation={elevation}
-      onMouseEnter={() => setElevation(5)}
-      onMouseLeave={() => setElevation(1)}
-    >
-      {children}
-    </Paper>
-  );
-};
-
-HighlightPaper.defaultProps = {
-  elevation: 1,
-};
-
-HighlightPaper.propTypes = {
-  children: PropTypes.any.isRequired,
-  elevation: PropTypes.number,
+const fetchData = () => {
+  const items = [
+    {
+      id: 1,
+      name: 'First Item',
+      created: new Date(),
+      high: 2935,
+      low: 1924,
+      average: 2429.5,
+    },
+    {
+      id: 2,
+      name: 'Second Item',
+      created: new Date(),
+      high: 439,
+      low: 231,
+      average: 335,
+    },
+    {
+      id: 3,
+      name: 'Third Item',
+      created: new Date(),
+      high: 8239,
+      low: 5629,
+      average: 6934,
+    },
+    {
+      id: 4,
+      name: 'Fourth Item',
+      created: new Date(),
+      high: 3203,
+      low: 3127,
+      average: 3165,
+    },
+    {
+      id: 5,
+      name: 'Fifth Item',
+      created: new Date(),
+      high: 981,
+      low: 879,
+      average: 930,
+    },
+  ];
+  return new Promise<any[]>((resolve) => {
+    setTimeout(() => resolve(items), 1000);
+  });
 };
 
 const Page = () => {
   const classes = useStyles();
+  const [items, setItems] = useState<any[]>([]);
+  useEffect(() => {
+    fetchData().then((items: any[]) => setItems(items));
+  }, []);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Created</TableCell>
+                    <TableCell align="right">High</TableCell>
+                    <TableCell align="right">Low</TableCell>
+                    <TableCell align="right">Average</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {items.map(({ id, name, created, high, low, average }) => (
+                    <TableRow key={id}>
+                      <TableCell component="th" scope="row">
+                        {name}
+                      </TableCell>
+                      <TableCell>{created.toLocaleString()}</TableCell>
+                      <TableCell align="right">{high}</TableCell>
+                      <TableCell align="right">{low}</TableCell>
+                      <TableCell align="right">{average}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-      </Grid>
+      </Container>
     </div>
   );
 };
