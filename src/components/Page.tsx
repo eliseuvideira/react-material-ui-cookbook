@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -10,12 +11,10 @@ import {
   Container,
   TableCell,
   TableRow,
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
+  IconButton,
 } from '@material-ui/core';
-import PropTypes from '../PropTypes';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,129 +30,73 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SummaryCard: React.FC<{
-  rowsSelected: number;
-  low: number;
-  high: number;
-}> = ({ rowsSelected, low, high }) => {
-  const classes = useStyles();
-  return (
-    <Card className={classes.card}>
-      <CardHeader title={`(${rowsSelected}) rows selected`} />
-      <CardContent>
-        <Grid container direction="column">
-          <Grid item>
-            <Grid container justify="space-between">
-              <Grid item>
-                <Typography>Low</Typography>
-              </Grid>
-              <Grid item>
-                <Typography>{low}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Grid container justify="space-between">
-              <Grid item>
-                <Typography>High</Typography>
-              </Grid>
-              <Grid item>
-                <Typography>{high}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Grid container justify="space-between">
-              <Grid item>
-                <Typography>Average</Typography>
-              </Grid>
-              <Grid item>
-                <Typography>{(high + low) / 2}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  );
-};
+const StartButton: React.FC<{
+  status: 'running' | 'off';
+  onClick: (...args: any) => any;
+}> = ({ status, onClick }) => (
+  <IconButton
+    onClick={onClick}
+    color={status === 'off' ? 'primary' : 'default'}
+    disabled={status === 'running'}
+  >
+    <PlayArrowIcon fontSize="small" />
+  </IconButton>
+);
 
-SummaryCard.propTypes = {
-  rowsSelected: PropTypes.number.isRequired,
-  high: PropTypes.number.isRequired,
-  low: PropTypes.number.isRequired,
-};
+const StopButton: React.FC<{
+  status: 'running' | 'off';
+  onClick: (...args: any) => any;
+}> = ({ status, onClick }) => (
+  <IconButton
+    onClick={onClick}
+    color={status === 'running' ? 'primary' : 'default'}
+    disabled={status === 'off'}
+  >
+    <StopIcon fontSize="small" />
+  </IconButton>
+);
 
 const Page = () => {
   const classes = useStyles();
-  const [columns] = useState([
-    { name: 'Name', active: false },
-    { name: 'Created', active: false },
-    { name: 'High', active: false, numeric: true },
-    { name: 'Low', active: false, numeric: true },
-    { name: 'Average', active: false, numeric: true },
-  ]);
   const [rows, setRows] = useState<
     {
       id: number;
       name: string;
-      created: Date;
-      high: number;
-      low: number;
-      average: number;
-      selected?: boolean;
+      status: 'running' | 'off';
     }[]
   >([
     {
       id: 1,
-      name: 'First Item',
-      created: new Date(),
-      high: 2935,
-      low: 1924,
-      average: 2429.5,
+      name: 'First Server',
+      status: 'running',
     },
     {
       id: 2,
-      name: 'Second Item',
-      created: new Date(),
-      high: 439,
-      low: 231,
-      average: 335,
+      name: 'Second Server',
+      status: 'off',
     },
     {
       id: 3,
-      name: 'Third Item',
-      created: new Date(),
-      high: 8239,
-      low: 5629,
-      average: 6934,
+      name: 'Third Server',
+      status: 'off',
     },
     {
       id: 4,
-      name: 'Fourth Item',
-      created: new Date(),
-      high: 3203,
-      low: 3127,
-      average: 3165,
-    },
-    {
-      id: 5,
-      name: 'Fifth Item',
-      created: new Date(),
-      high: 981,
-      low: 879,
-      average: 930,
+      name: 'Fourth Server',
+      status: 'running',
     },
   ]);
 
-  const onRowClick = (id: number) => () => {
+  const toggleStatus = (id: number) => () => {
     const newRows = [...rows];
     const index = rows.findIndex((row) => row.id === id);
     const row = rows[index];
-    newRows[index] = { ...row, selected: !row.selected };
+    newRows[index] = {
+      ...row,
+      status: row.status === 'running' ? 'off' : 'running',
+    };
     setRows(newRows);
   };
-  const selected = rows.filter((row) => row.selected);
 
   return (
     <div className={classes.root}>
@@ -161,39 +104,32 @@ const Page = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <SummaryCard
-              rowsSelected={selected.length}
-              high={selected.reduce((prev, curr) => prev + curr.high, 0)}
-              low={selected.reduce((prev, curr) => prev + curr.low, 0)}
-            />
             <Paper className={classes.paper}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.name}
-                        align={column.numeric ? 'right' : 'inherit'}
-                      >
-                        {column.name}
-                      </TableCell>
-                    ))}
+                    <TableCell>Name</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      onClick={onRowClick(row.id)}
-                      selected={row.selected}
-                    >
+                    <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
                         {row.name}
                       </TableCell>
-                      <TableCell>{row.created.toLocaleString()}</TableCell>
-                      <TableCell align="right">{row.high}</TableCell>
-                      <TableCell align="right">{row.low}</TableCell>
-                      <TableCell align="right">{row.average}</TableCell>
+                      <TableCell>{row.status}</TableCell>
+                      <TableCell>
+                        <StartButton
+                          status={row.status}
+                          onClick={toggleStatus(row.id)}
+                        />
+                        <StopButton
+                          status={row.status}
+                          onClick={toggleStatus(row.id)}
+                        />
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
