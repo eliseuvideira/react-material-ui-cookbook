@@ -1,73 +1,40 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, Card, CardContent, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+  card: {
+    maxWidth: 400,
+  },
+  content: {
+    marginTop: theme.spacing(1),
   },
 }));
-
-const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
-  children,
-  elevation: propsElevation,
-  ...props
-}) => {
-  const [elevation, setElevation] = useState(propsElevation);
-  return (
-    <Paper
-      {...props}
-      elevation={elevation}
-      onMouseEnter={() => setElevation(5)}
-      onMouseLeave={() => setElevation(1)}
-    >
-      {children}
-    </Paper>
-  );
-};
-
-HighlightPaper.defaultProps = {
-  elevation: 1,
-};
-
-HighlightPaper.propTypes = {
-  children: PropTypes.any.isRequired,
-  elevation: PropTypes.number,
-};
 
 const Page = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+      <Grid container>
+        <Grid item xs={12}>
+          <Card className={classes.card}>
+            <CardContent>
+              <Typography variant="h4">Subject Title</Typography>
+              <Typography variant="subtitle1">
+                A little more about subject
+              </Typography>
+              <Typography className={classes.content}>
+                Even more information on the subject, contained within the card.
+                You can fit a lot of information here, but don&apos;t try to
+                overdo it.
+              </Typography>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </div>
