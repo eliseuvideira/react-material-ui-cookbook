@@ -1,7 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { CssBaseline, Card, CardContent, Typography } from '@material-ui/core';
+import {
+  CssBaseline,
+  Card,
+  CardContent,
+  Typography,
+  CardHeader,
+  Avatar,
+} from '@material-ui/core';
+import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,15 +31,20 @@ const Page = () => {
       <Grid container>
         <Grid item xs={12}>
           <Card className={classes.card}>
+            <CardHeader
+              title="Ron Swanson"
+              subheader="Legend"
+              avatar={
+                <Avatar>
+                  <PersonIcon />
+                </Avatar>
+              }
+            />
             <CardContent>
-              <Typography variant="h4">Subject Title</Typography>
-              <Typography variant="subtitle1">
-                A little more about subject
-              </Typography>
-              <Typography className={classes.content}>
-                Even more information on the subject, contained within the card.
-                You can fit a lot of information here, but don&apos;t try to
-                overdo it.
+              <Typography variant="caption">Joined 2009</Typography>
+              <Typography>
+                Some filler text about the user. There doesn&apos;t have to be a
+                lot - just enough so that the text span at least two lines.
               </Typography>
             </CardContent>
           </Card>
