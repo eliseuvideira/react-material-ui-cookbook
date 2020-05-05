@@ -4,31 +4,26 @@ import {
   CssBaseline,
   Grid,
   Card,
-  CardContent,
-  Typography,
   CardHeader,
   CardMedia,
 } from '@material-ui/core';
 import grapeFruit from '../assets/images/grapefruit-slice-332-332.jpg';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
   card: {
     maxWidth: 400,
   },
-  content: {
-    marginTop: theme.spacing(1),
-  },
-  actions: {
-    justifyContent: 'flex-end',
-  },
   media: {
     height: 332,
     width: 'auto',
   },
-}));
+  header: {
+    textAlign: 'center',
+  },
+});
 
 const Page = () => {
   const classes = useStyles();
@@ -38,15 +33,16 @@ const Page = () => {
       <Grid container>
         <Grid item xs={12}>
           <Card className={classes.card}>
-            <CardHeader title="Grapefruit" subheader="Red" />
             <CardMedia
               className={classes.media}
               image={grapeFruit}
               title="Grapefruit"
             />
-            <CardContent>
-              <Typography>Mmmm. Grapefruit.</Typography>
-            </CardContent>
+            <CardHeader
+              className={classes.header}
+              title="Grapefruit"
+              subheader="Red"
+            />
           </Card>
         </Grid>
       </Grid>
