@@ -8,8 +8,12 @@ import {
   Typography,
   CardHeader,
   Avatar,
+  CardActions,
+  IconButton,
 } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
+import ContactMailIcon from '@material-ui/icons/ContactMail';
+import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +51,14 @@ const Page = () => {
                 lot - just enough so that the text span at least two lines.
               </Typography>
             </CardContent>
+            <CardActions>
+              <IconButton>
+                <ContactMailIcon />
+              </IconButton>
+              <IconButton>
+                <ContactPhoneIcon />
+              </IconButton>
+            </CardActions>
           </Card>
         </Grid>
       </Grid>
