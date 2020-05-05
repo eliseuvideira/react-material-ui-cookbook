@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   content: {
     marginTop: theme.spacing(1),
   },
+  actions: {
+    justifyContent: 'flex-end',
+  },
 }));
 
 const Page = () => {
@@ -51,7 +54,7 @@ const Page = () => {
                 lot - just enough so that the text span at least two lines.
               </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.actions} disableSpacing>
               <IconButton>
                 <ContactMailIcon />
               </IconButton>
