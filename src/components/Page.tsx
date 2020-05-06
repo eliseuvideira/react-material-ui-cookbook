@@ -13,7 +13,7 @@ const Page = () => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Snackbar open message="Test" />
+      <Snackbar open message="Test" ContentProps={{ variant: 'elevation' }} />
     </div>
   );
 };
