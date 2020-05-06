@@ -49,28 +49,29 @@ const Page = () => {
   const [second, setSecond] = useState(false);
   const [third, setThird] = useState(false);
   const [fourth, setFourth] = useState(false);
+  console.log(first);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Grid container spacing={8}>
         <Grid item>
-          <Button variant="contained" onClick={() => setFirst(true)}>
+          <Button variant="contained" onClick={() => setFirst(!first)}>
             Slide Down
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={() => setSecond(true)}>
+          <Button variant="contained" onClick={() => setSecond(!second)}>
             Slide Up
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={() => setThird(true)}>
+          <Button variant="contained" onClick={() => setThird(!third)}>
             Grow
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={() => setFourth(true)}>
+          <Button variant="contained" onClick={() => setFourth(!fourth)}>
             Fade
           </Button>
         </Grid>
