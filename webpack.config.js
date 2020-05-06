@@ -18,14 +18,6 @@ const config = {
         use: ['react-hot-loader/webpack', 'ts-loader'],
         exclude: /node_modules/,
       },
-      {
-        test: /\.(png|jpe?g)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-          },
-        ],
-      },
     ],
   },
   plugins: [
