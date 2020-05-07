@@ -1,69 +1,40 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  CssBaseline,
-  Snackbar,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from '@material-ui/core';
+import { CssBaseline, Snackbar, Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  formControl: {
-    margin: theme.spacing(3),
+  error: {
+    backgroundColor: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
   },
 }));
 
 const Page = () => {
   const classes = useStyles();
-  const [vertical, setVertical] = useState<'bottom' | 'top'>('bottom');
-  const [horizontal, setHorizontal] = useState<'center' | 'left' | 'right'>(
-    'left',
-  );
+  const [error, setError] = useState<any>(null);
 
-  const onVerticalChange = (event: any) => {
-    setVertical(event.target.value);
-  };
-
-  const onHorizontalChange = (event: any) => {
-    setHorizontal(event.target.value);
+  const onClose = () => {
+    setError(null);
   };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Vertical</FormLabel>
-        <RadioGroup
-          name="vertical"
-          value={vertical}
-          onChange={onVerticalChange}
-        >
-          <FormControlLabel value="top" control={<Radio />} label="Top" />
-          <FormControlLabel value="bottom" control={<Radio />} label="Bottom" />
-        </RadioGroup>
-      </FormControl>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Horizontal</FormLabel>
-        <RadioGroup
-          name="horizontal"
-          value={horizontal}
-          onChange={onHorizontalChange}
-        >
-          <FormControlLabel value="left" control={<Radio />} label="Left" />
-          <FormControlLabel value="center" control={<Radio />} label="Center" />
-          <FormControlLabel value="right" control={<Radio />} label="Right" />
-        </RadioGroup>
-      </FormControl>
+      <Button
+        variant="contained"
+        onClick={() => setError(new Error('Something happened'))}
+      >
+        Click Me!
+      </Button>
       <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={true}
-        message="Positioned Snackbar"
+        open={error !== null}
+        message={error && error.message}
+        onClose={onClose}
+        autoHideDuration={4000}
+        ContentProps={{ classes: { root: classes.error } }}
       />
     </div>
   );
