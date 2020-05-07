@@ -1,40 +1,33 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Snackbar, Button } from '@material-ui/core';
+import { CssBaseline, Snackbar, Button, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
-  error: {
-    backgroundColor: theme.palette.error.main,
-    color: theme.palette.error.contrastText,
-  },
-}));
+});
 
 const Page = () => {
   const classes = useStyles();
-  const [error, setError] = useState<any>(null);
-
-  const onClose = () => {
-    setError(null);
-  };
+  const [open, setOpen] = useState(false);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Button
-        variant="contained"
-        onClick={() => setError(new Error('Something happened'))}
-      >
-        Click Me!
+      <Button variant="contained" onClick={() => setOpen(true)}>
+        Do Something
       </Button>
       <Snackbar
-        open={error !== null}
-        message={error && error.message}
-        onClose={onClose}
-        autoHideDuration={4000}
-        ContentProps={{ classes: { root: classes.error } }}
+        open={open}
+        onClose={() => setOpen(false)}
+        message="All done doing the thing"
+        action={
+          <IconButton color="inherit" onClick={() => setOpen(false)}>
+            <CloseIcon />
+          </IconButton>
+        }
       />
     </div>
   );
