@@ -3,108 +3,67 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
   Snackbar,
-  Button,
-  SnackbarProps,
-  Slide,
-  Grow,
-  Fade,
-  Grid,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@material-ui/core';
-import PropTypes from '../PropTypes';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-});
-
-const CustomSnackbar: React.FC<
-  {
-    transition: 'slide' | 'grow' | 'fade';
-    direction?: 'left' | 'right' | 'down' | 'up';
-  } & SnackbarProps
-> = ({ transition, direction, ...props }) => (
-  <Snackbar
-    TransitionComponent={
-      {
-        slide: Slide,
-        grow: Grow,
-        fade: Fade,
-      }[transition]
-    }
-    TransitionProps={{ direction } as any}
-    {...props}
-  />
-);
-
-CustomSnackbar.propTypes = {
-  transition: PropTypes.any,
-  direction: PropTypes.any,
-};
+  formControl: {
+    margin: theme.spacing(3),
+  },
+}));
 
 const Page = () => {
   const classes = useStyles();
+  const [vertical, setVertical] = useState<'bottom' | 'top'>('bottom');
+  const [horizontal, setHorizontal] = useState<'center' | 'left' | 'right'>(
+    'left',
+  );
 
-  const [first, setFirst] = useState(false);
-  const [second, setSecond] = useState(false);
-  const [third, setThird] = useState(false);
-  const [fourth, setFourth] = useState(false);
-  console.log(first);
+  const onVerticalChange = (event: any) => {
+    setVertical(event.target.value);
+  };
+
+  const onHorizontalChange = (event: any) => {
+    setHorizontal(event.target.value);
+  };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={8}>
-        <Grid item>
-          <Button variant="contained" onClick={() => setFirst(!first)}>
-            Slide Down
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => setSecond(!second)}>
-            Slide Up
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => setThird(!third)}>
-            Grow
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => setFourth(!fourth)}>
-            Fade
-          </Button>
-        </Grid>
-      </Grid>
-      <CustomSnackbar
-        open={first}
-        onClose={() => setFirst(false)}
-        autoHideDuration={5000}
-        message="Slide Down"
-        transition="slide"
-        direction="down"
-      />
-      <CustomSnackbar
-        open={second}
-        onClose={() => setSecond(false)}
-        autoHideDuration={5000}
-        message="Slide Up"
-        transition="slide"
-        direction="up"
-      />
-      <CustomSnackbar
-        open={third}
-        onClose={() => setThird(false)}
-        autoHideDuration={5000}
-        message="Grow"
-        transition="grow"
-      />
-      <CustomSnackbar
-        open={fourth}
-        onClose={() => setFourth(false)}
-        autoHideDuration={5000}
-        message="Fade"
-        transition="fade"
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Vertical</FormLabel>
+        <RadioGroup
+          name="vertical"
+          value={vertical}
+          onChange={onVerticalChange}
+        >
+          <FormControlLabel value="top" control={<Radio />} label="Top" />
+          <FormControlLabel value="bottom" control={<Radio />} label="Bottom" />
+        </RadioGroup>
+      </FormControl>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Horizontal</FormLabel>
+        <RadioGroup
+          name="horizontal"
+          value={horizontal}
+          onChange={onHorizontalChange}
+        >
+          <FormControlLabel value="left" control={<Radio />} label="Left" />
+          <FormControlLabel value="center" control={<Radio />} label="Center" />
+          <FormControlLabel value="right" control={<Radio />} label="Right" />
+        </RadioGroup>
+      </FormControl>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={true}
+        message="Positioned Snackbar"
       />
     </div>
   );
