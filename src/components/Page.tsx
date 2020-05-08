@@ -1,7 +1,20 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Grid, Button, Typography } from '@material-ui/core';
-import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
+import {
+  CssBaseline,
+  Grid,
+  Button,
+  Typography,
+  ButtonProps,
+} from '@material-ui/core';
+import {
+  BrowserRouter,
+  Link,
+  Switch,
+  Route,
+  LinkProps,
+} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,6 +28,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const NavButton: React.FC<
+  {
+    color: 'inherit' | 'primary' | 'secondary' | 'default';
+  } & LinkProps &
+    ButtonProps
+> = ({ color, ...props }) => (
+  <Switch>
+    <Route
+      exact
+      path={props.to as string}
+      render={() => <Button color={color} component={Link} {...props} />}
+    />
+    <Route path="/" render={() => <Button component={Link} {...props} />} />
+  </Switch>
+);
+
+NavButton.propTypes = {
+  color: PropTypes.any.isRequired,
+  to: PropTypes.any,
+};
+
 const Page = () => {
   const classes = useStyles();
 
@@ -26,19 +60,19 @@ const Page = () => {
           <Grid item>
             <Grid container>
               <Grid item>
-                <Button component={Link} to="/">
+                <NavButton color="primary" component={Link} to="/">
                   Home
-                </Button>
+                </NavButton>
               </Grid>
               <Grid item>
-                <Button component={Link} to="/users">
+                <NavButton color="primary" component={Link} to="/users">
                   Users
-                </Button>
+                </NavButton>
               </Grid>
               <Grid item>
-                <Button component={Link} to="/settings">
+                <NavButton color="primary" component={Link} to="/settings">
                   Settings
-                </Button>
+                </NavButton>
               </Grid>
             </Grid>
           </Grid>
