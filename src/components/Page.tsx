@@ -1,103 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  CssBaseline,
-  Grid,
-  Button,
-  Typography,
-  ButtonProps,
-} from '@material-ui/core';
-import {
-  BrowserRouter,
-  Link,
-  Switch,
-  Route,
-  LinkProps,
-} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { CssBaseline, Typography, Fab } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
-  container: {
-    padding: theme.spacing(1),
+  fab: {
+    margin: 0,
+    top: 'auto',
+    left: 'auto',
+    bottom: 20,
+    right: 20,
+    position: 'fixed',
   },
-  content: {
-    margin: theme.spacing(2),
-  },
-}));
+});
 
-const NavButton: React.FC<
-  {
-    color: 'inherit' | 'primary' | 'secondary' | 'default';
-  } & LinkProps &
-    ButtonProps
-> = ({ color, ...props }) => (
-  <Switch>
-    <Route
-      exact
-      path={props.to as string}
-      render={() => <Button color={color} component={Link} {...props} />}
-    />
-    <Route path="/" render={() => <Button component={Link} {...props} />} />
-  </Switch>
-);
-
-NavButton.propTypes = {
-  color: PropTypes.any.isRequired,
-  to: PropTypes.any,
-};
+type Color = 'default' | 'primary' | 'secondary';
 
 const Page = () => {
   const classes = useStyles();
+  const [color, setColor] = useState<Color>('default');
+
+  const onClick = () => {
+    switch (color) {
+      case 'default':
+        setColor('primary');
+        break;
+      case 'primary':
+        setColor('secondary');
+        break;
+      case 'secondary':
+        setColor('default');
+        break;
+    }
+  };
 
   return (
-    <BrowserRouter>
-      <div className={classes.root}>
-        <CssBaseline />
-        <Grid container direction="column" className={classes.container}>
-          <Grid item>
-            <Grid container>
-              <Grid item>
-                <NavButton color="primary" component={Link} to="/">
-                  Home
-                </NavButton>
-              </Grid>
-              <Grid item>
-                <NavButton color="primary" component={Link} to="/users">
-                  Users
-                </NavButton>
-              </Grid>
-              <Grid item>
-                <NavButton color="primary" component={Link} to="/settings">
-                  Settings
-                </NavButton>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item className={classes.content}>
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={() => <Typography>Home content</Typography>}
-              />
-              <Route
-                exact
-                path="/users"
-                render={() => <Typography>Users</Typography>}
-              />
-              <Route
-                exact
-                path="/settings"
-                render={() => <Typography>Settings</Typography>}
-              />
-            </Switch>
-          </Grid>
-        </Grid>
-      </div>
-    </BrowserRouter>
+    <div className={classes.root}>
+      <CssBaseline />
+      <Typography>Content</Typography>
+      <Fab className={classes.fab} color={color} onClick={onClick}>
+        <AddIcon />
+      </Fab>
+    </div>
   );
 };
 
