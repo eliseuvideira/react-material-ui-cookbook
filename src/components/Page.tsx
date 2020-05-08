@@ -41,8 +41,14 @@ const Page = () => {
     <div className={classes.root}>
       <CssBaseline />
       <Typography>Content</Typography>
-      <Fab className={classes.fab} color={color} onClick={onClick}>
+      <Fab
+        className={classes.fab}
+        color={color}
+        variant="extended"
+        onClick={onClick}
+      >
         <AddIcon />
+        Add Item
       </Fab>
     </div>
   );
