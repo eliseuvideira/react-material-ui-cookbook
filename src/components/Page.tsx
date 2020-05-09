@@ -1,73 +1,50 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, Grid, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+  container: {
+    margin: theme.spacing(2),
   },
 }));
 
-const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
-  children,
-  elevation: propsElevation,
-  ...props
-}) => {
-  const [elevation, setElevation] = useState(propsElevation);
-  return (
-    <Paper
-      {...props}
-      elevation={elevation}
-      onMouseEnter={() => setElevation(5)}
-      onMouseLeave={() => setElevation(1)}
-    >
-      {children}
-    </Paper>
-  );
-};
-
-HighlightPaper.defaultProps = {
-  elevation: 1,
-};
-
-HighlightPaper.propTypes = {
-  children: PropTypes.any.isRequired,
-  elevation: PropTypes.number,
-};
-
 const Page = () => {
   const classes = useStyles();
+
+  const [first, setFirst] = useState('');
+  const [second, setSecond] = useState('');
+  const [third, setThird] = useState('');
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+      <Grid container spacing={4} className={classes.container}>
+        <Grid item>
+          <TextField
+            id="first"
+            label="First"
+            value={first}
+            onChange={(e) => setFirst(e.target.value)}
+          />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+        <Grid item>
+          <TextField
+            id="second"
+            label="Second"
+            value={second}
+            onChange={(e) => setSecond(e.target.value)}
+          />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+        <Grid item>
+          <TextField
+            id="third"
+            label="Third"
+            value={third}
+            onChange={(e) => setThird(e.target.value)}
+          />
         </Grid>
       </Grid>
     </div>
