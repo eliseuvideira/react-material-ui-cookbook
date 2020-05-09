@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, TextField } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,6 +12,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const CustomTextField: React.FC<{
+  isInvalid: (value: string) => false | string;
+  value: string;
+  helperText?: string;
+  [key: string]: any;
+}> = ({ isInvalid, value, helperText, ...props }) => {
+  const error = value !== '' && isInvalid(value);
+  return (
+    <TextField error={!!error} helperText={error || helperText} {...props} />
+  );
+};
+
+CustomTextField.propTypes = {
+  isInvalid: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  helperText: PropTypes.string,
+};
+
 const Page = () => {
   const classes = useStyles();
   const [inputs, setInputs] = useState([
@@ -19,27 +38,20 @@ const Page = () => {
       label: 'Phone',
       placeholder: '999-999-9999',
       value: '',
-      error: false,
       helperText: 'Any valid phone number will do',
-      getHelperText: (error: boolean) =>
-        error
-          ? 'Woops. Not a valid phone number'
-          : 'Any valid phone number will do',
-      isValid: (value: string) =>
-        /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/.test(value),
+      isInvalid: (value: string) =>
+        /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/.test(value)
+          ? false
+          : 'Woops. Not a valid phone number',
     },
     {
       id: 'email',
       label: 'Email',
       placeholder: 'john@acme.com',
       value: '',
-      error: false,
       helperText: 'Any valid email address will do',
-      getHelperText: (error: boolean) =>
-        error
-          ? 'Woops. Not a valid email address'
-          : 'Any valid phone number will do',
-      isValid: (value: string) => /\S+@\S+\.\S+/.test(value),
+      isInvalid: (value: string) =>
+        /\S+@\S+\.\S+/.test(value) ? false : 'Woops. Not a valid email address',
     },
   ]);
 
@@ -48,14 +60,10 @@ const Page = () => {
   }: T): void => {
     const newInputs = [...inputs];
     const index = inputs.findIndex((input) => input.id === id);
-    const input = newInputs[index];
-    const isValid = input.isValid(value);
 
     newInputs[index] = {
       ...newInputs[index],
       value,
-      error: !isValid,
-      helperText: input.getHelperText(!isValid),
     };
 
     setInputs(newInputs);
@@ -67,14 +75,14 @@ const Page = () => {
       <Grid container spacing={4} className={classes.container}>
         {inputs.map((input) => (
           <Grid item key={input.id}>
-            <TextField
+            <CustomTextField
               id={input.id}
               label={input.label}
               placeholder={input.placeholder}
               helperText={input.helperText}
               value={input.value}
               onChange={onChange}
-              error={input.error}
+              isInvalid={input.isInvalid}
             />
           </Grid>
         ))}
