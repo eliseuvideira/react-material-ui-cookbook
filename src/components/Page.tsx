@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Grid, TextField } from '@material-ui/core';
+import {
+  CssBaseline,
+  Grid,
+  TextField,
+  InputAdornment,
+  IconButton,
+  TextFieldProps,
+} from '@material-ui/core';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,21 +20,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const PasswordField: React.FC<Omit<TextFieldProps, 'type'>> = (props) => {
+  const [visible, setVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setVisible(!visible);
+  };
+
+  return (
+    <TextField
+      type={visible ? 'text' : 'password'}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={toggleVisibility}>
+              {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      {...(props as TextFieldProps)}
+    />
+  );
+};
+
 const Page = () => {
   const classes = useStyles();
-  const [multiline, setMultiline] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Grid container spacing={4} className={classes.container}>
         <Grid item>
-          <TextField
-            multiline
-            rows={5}
-            label="Multiline Text"
-            value={multiline}
-            onChange={(e) => setMultiline(e.target.value)}
+          <PasswordField
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
       </Grid>
