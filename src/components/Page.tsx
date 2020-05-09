@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Typography, Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { CssBaseline, Grid, IconButton } from '@material-ui/core';
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
 const useStyles = makeStyles({
   root: {
@@ -17,39 +20,32 @@ const useStyles = makeStyles({
   },
 });
 
-type Color = 'default' | 'primary' | 'secondary';
-
 const Page = () => {
   const classes = useStyles();
-  const [color, setColor] = useState<Color>('default');
-
-  const onClick = () => {
-    switch (color) {
-      case 'default':
-        setColor('primary');
-        break;
-      case 'primary':
-        setColor('secondary');
-        break;
-      case 'secondary':
-        setColor('default');
-        break;
-    }
-  };
+  const [mic, setMic] = useState(true);
+  const [volume, setVolume] = useState(true);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Typography>Content</Typography>
-      <Fab
-        className={classes.fab}
-        color={color}
-        variant="extended"
-        onClick={onClick}
-      >
-        <AddIcon />
-        Add Item
-      </Fab>
+      <Grid container>
+        <Grid item>
+          <IconButton
+            color={mic ? 'primary' : 'default'}
+            onClick={() => setMic(!mic)}
+          >
+            {mic ? <MicIcon /> : <MicOffIcon />}
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton
+            color={volume ? 'primary' : 'default'}
+            onClick={() => setVolume(!volume)}
+          >
+            {volume ? <VolumeUpIcon /> : <VolumeOffIcon />}
+          </IconButton>
+        </Grid>
+      </Grid>
     </div>
   );
 };
