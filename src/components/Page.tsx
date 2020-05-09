@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, TextField } from '@material-ui/core';
 
@@ -14,35 +14,26 @@ const useStyles = makeStyles((theme) => ({
 const Page = () => {
   const classes = useStyles();
 
-  const [inputs, setInputs] = useState([
-    { id: 'first', label: 'First', value: '' },
-    { id: 'second', label: 'Second', value: '' },
-    { id: 'third', label: 'Third', value: '' },
-  ]);
-
-  const onChange = <T extends { target: { id: string; value: string } }>({
-    target: { id, value },
-  }: T): void => {
-    const newInputs = [...inputs];
-    const index = inputs.findIndex((input) => input.id === id);
-    newInputs[index] = { ...newInputs[index], value };
-    setInputs(newInputs);
-  };
-
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Grid container spacing={4} className={classes.container}>
-        {inputs.map((input) => (
-          <Grid item key={input.id}>
-            <TextField
-              id={input.id}
-              label={input.label}
-              value={input.value}
-              onChange={onChange}
-            />
-          </Grid>
-        ))}
+        <Grid item>
+          <TextField label="Label" />
+        </Grid>
+        <Grid item>
+          <TextField placeholder="Placeholder" />
+        </Grid>
+        <Grid item>
+          <TextField helperText="Helper Text, brief explanation of the value" />
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Label"
+            placeholder="Placeholder"
+            helperText="Helper Text, brief explanation of the value"
+          />
+        </Grid>
       </Grid>
     </div>
   );
