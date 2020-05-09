@@ -14,38 +14,35 @@ const useStyles = makeStyles((theme) => ({
 const Page = () => {
   const classes = useStyles();
 
-  const [first, setFirst] = useState('');
-  const [second, setSecond] = useState('');
-  const [third, setThird] = useState('');
+  const [inputs, setInputs] = useState([
+    { id: 'first', label: 'First', value: '' },
+    { id: 'second', label: 'Second', value: '' },
+    { id: 'third', label: 'Third', value: '' },
+  ]);
+
+  const onChange = <T extends { target: { id: string; value: string } }>({
+    target: { id, value },
+  }: T): void => {
+    const newInputs = [...inputs];
+    const index = inputs.findIndex((input) => input.id === id);
+    newInputs[index] = { ...newInputs[index], value };
+    setInputs(newInputs);
+  };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Grid container spacing={4} className={classes.container}>
-        <Grid item>
-          <TextField
-            id="first"
-            label="First"
-            value={first}
-            onChange={(e) => setFirst(e.target.value)}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            id="second"
-            label="Second"
-            value={second}
-            onChange={(e) => setSecond(e.target.value)}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            id="third"
-            label="Third"
-            value={third}
-            onChange={(e) => setThird(e.target.value)}
-          />
-        </Grid>
+        {inputs.map((input) => (
+          <Grid item key={input.id}>
+            <TextField
+              id={input.id}
+              label={input.label}
+              value={input.value}
+              onChange={onChange}
+            />
+          </Grid>
+        ))}
       </Grid>
     </div>
   );
