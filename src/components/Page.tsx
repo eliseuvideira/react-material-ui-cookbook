@@ -22,6 +22,7 @@ const Page = () => {
         <Grid item>
           <TextField
             multiline
+            rows={5}
             label="Multiline Text"
             value={multiline}
             onChange={(e) => setMultiline(e.target.value)}
