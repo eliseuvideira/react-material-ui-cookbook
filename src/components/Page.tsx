@@ -13,8 +13,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Page = () => {
   const classes = useStyles();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [multiline, setMultiline] = useState('');
 
   return (
     <div className={classes.root}>
@@ -22,22 +21,10 @@ const Page = () => {
       <Grid container spacing={4} className={classes.container}>
         <Grid item>
           <TextField
-            id="username"
-            label="Username"
-            autoComplete="username"
-            InputProps={{ name: 'username' }}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            id="password"
-            type="password"
-            label="Password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            multiline
+            label="Multiline Text"
+            value={multiline}
+            onChange={(e) => setMultiline(e.target.value)}
           />
         </Grid>
       </Grid>
