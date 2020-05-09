@@ -13,6 +13,8 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import PropTypes from 'prop-types';
+import MaskedInput from 'react-text-mask';
+import emailMask from 'text-mask-addons/dist/emailMask';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,10 +87,53 @@ ValidationField.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
+const PhoneInput: React.FC<any> = ({ inputRef, ...props }) => (
+  <MaskedInput
+    {...props}
+    ref={(ref) => {
+      inputRef(ref ? ref.inputElement : null);
+    }}
+    mask={[
+      '(',
+      /[1-9]/,
+      /\d/,
+      /\d/,
+      ')',
+      ' ',
+      /\d/,
+      /\d/,
+      /\d/,
+      '-',
+      /\d/,
+      /\d/,
+      /\d/,
+      /\d/,
+    ]}
+    placeholderChar={'\u2000'}
+  />
+);
+
+PhoneInput.propTypes = {
+  inputRef: PropTypes.any,
+};
+
+const EmailInput: React.FC<any> = ({ inputRef, ...props }) => (
+  <MaskedInput
+    {...props}
+    ref={(ref) => inputRef(ref ? ref.inputElement : null)}
+    mask={emailMask}
+  />
+);
+
+EmailInput.propTypes = {
+  inputRef: PropTypes.any,
+};
+
 const Page = () => {
   const classes = useStyles();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
   return (
     <div className={classes.root}>
@@ -100,18 +145,30 @@ const Page = () => {
         direction="column"
       >
         <Grid item>
-          <ValidationField
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            isValid={(v) => /\S+@\S+\.\S+/.test(v)}
-          />
-        </Grid>
-        <Grid item>
           <PasswordField
             label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            InputProps={{
+              inputComponent: PhoneInput,
+            }}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              inputComponent: EmailInput,
+            }}
           />
         </Grid>
       </Grid>
