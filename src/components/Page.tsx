@@ -23,17 +23,16 @@ const useStyles = makeStyles((theme) => ({
 const PasswordField: React.FC<Omit<TextFieldProps, 'type'>> = (props) => {
   const [visible, setVisible] = useState(false);
 
-  const toggleVisibility = () => {
-    setVisible(!visible);
-  };
-
   return (
     <TextField
       type={visible ? 'text' : 'password'}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={toggleVisibility}>
+            <IconButton
+              onMouseDown={() => setVisible(true)}
+              onMouseUp={() => setVisible(false)}
+            >
               {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
           </InputAdornment>
