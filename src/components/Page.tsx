@@ -1,49 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Grid, IconButton } from '@material-ui/core';
-import MicIcon from '@material-ui/icons/Mic';
-import MicOffIcon from '@material-ui/icons/MicOff';
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import { CssBaseline, Grid, Button } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
-  fab: {
-    margin: 0,
-    top: 'auto',
-    left: 'auto',
-    bottom: 20,
-    right: 20,
-    position: 'fixed',
-  },
 });
 
 const Page = () => {
   const classes = useStyles();
-  const [mic, setMic] = useState(true);
-  const [volume, setVolume] = useState(true);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container>
+      <Grid container direction="column" spacing={4}>
         <Grid item>
-          <IconButton
-            color={mic ? 'primary' : 'default'}
-            onClick={() => setMic(!mic)}
-          >
-            {mic ? <MicIcon /> : <MicOffIcon />}
-          </IconButton>
+          <Button variant="contained" size="small" color="primary">
+            Add
+          </Button>
         </Grid>
         <Grid item>
-          <IconButton
-            color={volume ? 'primary' : 'default'}
-            onClick={() => setVolume(!volume)}
-          >
-            {volume ? <VolumeUpIcon /> : <VolumeOffIcon />}
-          </IconButton>
+          <Button variant="contained" size="medium" color="primary">
+            Add
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" size="large" color="primary">
+            Add
+          </Button>
         </Grid>
       </Grid>
     </div>
