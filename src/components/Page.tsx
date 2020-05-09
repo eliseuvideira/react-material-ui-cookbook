@@ -1,73 +1,175 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
+import {
+  CssBaseline,
+  Grid,
+  TextField,
+  InputAdornment,
+  IconButton,
+  TextFieldProps,
+} from '@material-ui/core';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 import PropTypes from 'prop-types';
-import { CssBaseline } from '@material-ui/core';
+import MaskedInput from 'react-text-mask';
+import emailMask from 'text-mask-addons/dist/emailMask';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+  container: {
+    margin: theme.spacing(2),
   },
 }));
 
-const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
-  children,
-  elevation: propsElevation,
-  ...props
-}) => {
-  const [elevation, setElevation] = useState(propsElevation);
+const PasswordField: React.FC<Omit<TextFieldProps, 'type'>> = (props) => {
+  const [visible, setVisible] = useState(false);
+
   return (
-    <Paper
-      {...props}
-      elevation={elevation}
-      onMouseEnter={() => setElevation(5)}
-      onMouseLeave={() => setElevation(1)}
-    >
-      {children}
-    </Paper>
+    <TextField
+      type={visible ? 'text' : 'password'}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              onMouseDown={() => setVisible(true)}
+              onMouseUp={() => setVisible(false)}
+            >
+              {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      {...(props as TextFieldProps)}
+    />
   );
 };
 
-HighlightPaper.defaultProps = {
-  elevation: 1,
+const ValidationField: React.FC<
+  { isValid: (value: string) => boolean; value: string } & TextFieldProps
+> = ({ isValid, value, ...props }) => {
+  const empty = value === '';
+  const valid = isValid(value);
+  let startAdornment: any;
+
+  if (empty) {
+    startAdornment = null;
+  } else {
+    if (valid) {
+      startAdornment = (
+        <InputAdornment position="start">
+          <CheckCircleIcon color="primary" />
+        </InputAdornment>
+      );
+    } else {
+      startAdornment = (
+        <InputAdornment position="start">
+          <ErrorIcon color="error" />
+        </InputAdornment>
+      );
+    }
+  }
+
+  return (
+    <TextField
+      {...props}
+      error={!empty && !valid}
+      InputProps={{ startAdornment }}
+    />
+  );
 };
 
-HighlightPaper.propTypes = {
-  children: PropTypes.any.isRequired,
-  elevation: PropTypes.number,
+ValidationField.propTypes = {
+  isValid: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
+
+const PhoneInput: React.FC<any> = ({ inputRef, ...props }) => (
+  <MaskedInput
+    {...props}
+    ref={(ref) => {
+      inputRef(ref ? ref.inputElement : null);
+    }}
+    mask={[
+      '(',
+      /[1-9]/,
+      /\d/,
+      /\d/,
+      ')',
+      ' ',
+      /\d/,
+      /\d/,
+      /\d/,
+      '-',
+      /\d/,
+      /\d/,
+      /\d/,
+      /\d/,
+    ]}
+    placeholderChar={'\u2000'}
+  />
+);
+
+PhoneInput.propTypes = {
+  inputRef: PropTypes.any,
+};
+
+const EmailInput: React.FC<any> = ({ inputRef, ...props }) => (
+  <MaskedInput
+    {...props}
+    ref={(ref) => inputRef(ref ? ref.inputElement : null)}
+    mask={emailMask}
+  />
+);
+
+EmailInput.propTypes = {
+  inputRef: PropTypes.any,
 };
 
 const Page = () => {
   const classes = useStyles();
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+      <Grid
+        container
+        spacing={4}
+        className={classes.container}
+        direction="column"
+      >
+        <Grid item>
+          <PasswordField
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+        <Grid item>
+          <TextField
+            label="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            InputProps={{
+              inputComponent: PhoneInput,
+            }}
+          />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+        <Grid item>
+          <TextField
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              inputComponent: EmailInput,
+            }}
+          />
         </Grid>
       </Grid>
     </div>
