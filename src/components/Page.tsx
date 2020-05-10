@@ -9,6 +9,10 @@ import {
   Checkbox,
   Grid,
   Container,
+  List,
+  Typography,
+  ListItem,
+  ListItemText,
 } from '@material-ui/core';
 import PropTypes from '../PropTypes';
 
@@ -72,13 +76,25 @@ const Page = () => {
     <div className={classes.root}>
       <CssBaseline />
       <Container>
-        <Grid container spacing={4}>
+        <Grid container direction="column" spacing={4}>
           <Grid item>
             <CheckboxGroup
               label="Choices"
               values={values}
               onChange={onChange}
             />
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">Selection</Typography>
+            <List>
+              {values
+                .filter((value) => value.checked)
+                .map((value, index) => (
+                  <ListItem key={index}>
+                    <ListItemText>{value.label}</ListItemText>
+                  </ListItem>
+                ))}
+            </List>
           </Grid>
         </Grid>
       </Container>
