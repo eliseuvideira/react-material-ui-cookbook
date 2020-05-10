@@ -1,40 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
-import ChipInput from 'material-ui-chip-input';
+import Grid from '@material-ui/core/Grid';
+import Paper, { PaperProps } from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import { CssBaseline } from '@material-ui/core';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  chipInput: {
-    minWidth: 300,
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
   },
-});
+}));
+
+const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
+  children,
+  elevation: propsElevation,
+  ...props
+}) => {
+  const [elevation, setElevation] = useState(propsElevation);
+  return (
+    <Paper
+      {...props}
+      elevation={elevation}
+      onMouseEnter={() => setElevation(5)}
+      onMouseLeave={() => setElevation(1)}
+    >
+      {children}
+    </Paper>
+  );
+};
+
+HighlightPaper.defaultProps = {
+  elevation: 1,
+};
+
+HighlightPaper.propTypes = {
+  children: PropTypes.any.isRequired,
+  elevation: PropTypes.number,
+};
 
 const Page = () => {
   const classes = useStyles();
-  const [values, setValues] = useState<any>([]);
-
-  const onAdd = (chip: any) => {
-    setValues([...values, chip]);
-  };
-
-  const onDelete = (_: any, index: any) => {
-    setValues(values.filter((_: any, i: any) => i !== index));
-  };
-
   return (
     <div className={classes.root}>
-      <Grid container>
-        <Grid item>
-          <ChipInput
-            className={classes.chipInput}
-            helperText="Type name, hit enter to type another"
-            value={values}
-            onAdd={onAdd}
-            onDelete={onDelete}
-          />
+      <CssBaseline />
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <HighlightPaper className={classes.paper}>
+            xs=12 sm=6 md=3
+          </HighlightPaper>
         </Grid>
       </Grid>
     </div>
