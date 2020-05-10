@@ -72,6 +72,7 @@ const Page = () => {
                   key={index}
                   control={
                     <Checkbox
+                      color="primary"
                       checked={items[name]}
                       onChange={onChange}
                       inputProps={{ name }}
