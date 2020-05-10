@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
-  FormControl,
-  FormLabel,
   FormGroup,
   FormControlLabel,
   Checkbox,
   Grid,
   Container,
-  List,
-  Typography,
-  ListItem,
-  ListItemText,
 } from '@material-ui/core';
-import PropTypes from '../PropTypes';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import AccountBalanceOutlinedIcon from '@material-ui/icons/AccountBalanceOutlined';
+import BackupIcon from '@material-ui/icons/Backup';
+import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
+import BuildIcon from '@material-ui/icons/Build';
+import BuildOutlinedIcon from '@material-ui/icons/BuildOutlined';
 
 const useStyles = makeStyles({
   root: {
@@ -22,54 +21,43 @@ const useStyles = makeStyles({
   },
 });
 
-type CheckBoxData = { checked: boolean; label: string };
-
-const CheckboxGroup: React.FC<{
-  values: CheckBoxData[];
-  label: string;
-  onChange: (
-    index: number,
-  ) => ({ target: { checked } }: { target: { checked: boolean } }) => void;
-}> = ({ values, label, onChange }) => (
-  <FormControl component="fieldset">
-    <FormLabel component="legend">{label}</FormLabel>
-    <FormGroup>
-      {values.map((value, index) => (
-        <FormControlLabel
-          key={index}
-          control={
-            <Checkbox checked={value.checked} onChange={onChange(index)} />
-          }
-          label={value.label}
-        />
-      ))}
-    </FormGroup>
-  </FormControl>
-);
-
-CheckboxGroup.propTypes = {
-  values: PropTypes.array.isRequired,
-  label: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
+const initialItems = [
+  {
+    name: 'AccountBalance',
+    Icon: AccountBalanceOutlinedIcon,
+    CheckedIcon: AccountBalanceIcon,
+  },
+  {
+    name: 'Backup',
+    Icon: BackupOutlinedIcon,
+    CheckedIcon: BackupIcon,
+  },
+  {
+    name: 'Build',
+    Icon: BuildOutlinedIcon,
+    CheckedIcon: BuildIcon,
+  },
+];
 
 const Page = () => {
   const classes = useStyles();
-  const [values, setValues] = useState<CheckBoxData[]>([
-    { label: 'First', checked: false },
-    { label: 'Second', checked: false },
-    { label: 'Third', checked: false },
-  ]);
+  const [items, setItems] = useState<any>({});
 
-  const onChange = (index: number) => ({
-    target: { checked },
+  useEffect(() => {
+    setItems(
+      initialItems.reduce(
+        (state, item) => ({ ...state, [item.name]: false }),
+        {},
+      ),
+    );
+  }, []);
+
+  const onChange = ({
+    target: { name, checked },
   }: {
-    target: { checked: boolean };
+    target: { name: string; checked: boolean };
   }) => {
-    const newValues = [...values];
-    const value = newValues[index];
-    newValues[index] = { ...value, checked };
-    setValues(newValues);
+    setItems({ ...items, [name]: checked });
   };
 
   return (
@@ -78,23 +66,23 @@ const Page = () => {
       <Container>
         <Grid container direction="column" spacing={4}>
           <Grid item>
-            <CheckboxGroup
-              label="Choices"
-              values={values}
-              onChange={onChange}
-            />
-          </Grid>
-          <Grid item>
-            <Typography variant="h6">Selection</Typography>
-            <List>
-              {values
-                .filter((value) => value.checked)
-                .map((value, index) => (
-                  <ListItem key={index}>
-                    <ListItemText>{value.label}</ListItemText>
-                  </ListItem>
-                ))}
-            </List>
+            <FormGroup>
+              {initialItems.map(({ name, Icon, CheckedIcon }, index) => (
+                <FormControlLabel
+                  key={index}
+                  control={
+                    <Checkbox
+                      checked={items[name]}
+                      onChange={onChange}
+                      inputProps={{ name }}
+                      icon={<Icon fontSize="small" />}
+                      checkedIcon={<CheckedIcon fontSize="small" />}
+                    />
+                  }
+                  label={name}
+                />
+              ))}
+            </FormGroup>
           </Grid>
         </Grid>
       </Container>
