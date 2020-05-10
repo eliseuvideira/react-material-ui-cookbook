@@ -18,6 +18,8 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import clsx from 'clsx';
+import match from 'autosuggest-highlight/match';
+import parse from 'autosuggest-highlight/parse';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,6 +90,24 @@ const Control = (props: any) => (
   />
 );
 
+const ValueLabel = (props: any) => {
+  const matches = match(props.label, props.search);
+  const parts = parse(props.label, matches);
+  return (
+    <>
+      {parts.map((part, index) =>
+        part.highlight ? (
+          <span key={index} style={{ fontWeight: 500 }}>
+            {part.text}
+          </span>
+        ) : (
+          <span key={index}>{part.text}</span>
+        ),
+      )}
+    </>
+  );
+};
+
 const Option = (props: any) => (
   <MenuItem
     buttonRef={props.innerRef}
@@ -98,7 +118,7 @@ const Option = (props: any) => (
     }}
     {...props.innerProps}
   >
-    {props.children}
+    <ValueLabel label={props.children} search={props.selectProps.inputValue} />
   </MenuItem>
 );
 
