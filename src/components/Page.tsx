@@ -1,75 +1,87 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import { CssBaseline } from '@material-ui/core';
+import {
+  CssBaseline,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+  Container,
+} from '@material-ui/core';
+import PropTypes from '../PropTypes';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
+});
 
-const HighlightPaper: React.FC<PropsWithChildren<PaperProps>> = ({
-  children,
-  elevation: propsElevation,
-  ...props
-}) => {
-  const [elevation, setElevation] = useState(propsElevation);
-  return (
-    <Paper
-      {...props}
-      elevation={elevation}
-      onMouseEnter={() => setElevation(5)}
-      onMouseLeave={() => setElevation(1)}
-    >
-      {children}
-    </Paper>
-  );
-};
+type CheckBoxData = { checked: boolean; label: string };
 
-HighlightPaper.defaultProps = {
-  elevation: 1,
-};
+const CheckboxGroup: React.FC<{
+  values: CheckBoxData[];
+  label: string;
+  onChange: (
+    index: number,
+  ) => ({ target: { checked } }: { target: { checked: boolean } }) => void;
+}> = ({ values, label, onChange }) => (
+  <FormControl component="fieldset">
+    <FormLabel component="legend">{label}</FormLabel>
+    <FormGroup>
+      {values.map((value, index) => (
+        <FormControlLabel
+          key={index}
+          control={
+            <Checkbox checked={value.checked} onChange={onChange(index)} />
+          }
+          label={value.label}
+        />
+      ))}
+    </FormGroup>
+  </FormControl>
+);
 
-HighlightPaper.propTypes = {
-  children: PropTypes.any.isRequired,
-  elevation: PropTypes.number,
+CheckboxGroup.propTypes = {
+  values: PropTypes.array.isRequired,
+  label: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 const Page = () => {
   const classes = useStyles();
+  const [values, setValues] = useState<CheckBoxData[]>([
+    { label: 'First', checked: false },
+    { label: 'Second', checked: false },
+    { label: 'Third', checked: false },
+  ]);
+
+  const onChange = (index: number) => ({
+    target: { checked },
+  }: {
+    target: { checked: boolean };
+  }) => {
+    const newValues = [...values];
+    const value = newValues[index];
+    newValues[index] = { ...value, checked };
+    setValues(newValues);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
+      <Container>
+        <Grid container spacing={4}>
+          <Grid item>
+            <CheckboxGroup
+              label="Choices"
+              values={values}
+              onChange={onChange}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <HighlightPaper className={classes.paper}>
-            xs=12 sm=6 md=3
-          </HighlightPaper>
-        </Grid>
-      </Grid>
+      </Container>
     </div>
   );
 };
