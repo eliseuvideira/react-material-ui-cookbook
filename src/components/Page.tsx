@@ -10,7 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import CancelIcon from '@material-ui/icons/Cancel';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { CssBaseline, Grid, Container } from '@material-ui/core';
+import { CssBaseline, Grid, Container, Chip } from '@material-ui/core';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -144,6 +145,18 @@ const DropdownIndicator = (props: any) => (
   </IconButton>
 );
 
+const MultiValue = (props: any) => (
+  <Chip
+    tabIndex={-1}
+    label={props.children}
+    className={clsx(props.selectProps.classes.chip, {
+      [props.selectProps.classes.chipFocused]: props.isFocused,
+    })}
+    onDelete={props.removeProps.onClick}
+    deleteIcon={<CancelIcon {...props.removeProps} />}
+  />
+);
+
 function Autocomplete(props: any) {
   const classes = useStyles();
   const [value, setValue] = useState<any>(null);
@@ -166,6 +179,7 @@ function Autocomplete(props: any) {
 }
 
 Autocomplete.defaultProps = {
+  isMulti: true,
   isClearable: true,
   components: {
     Control,
@@ -174,6 +188,7 @@ Autocomplete.defaultProps = {
     Option,
     Placeholder,
     SingleValue,
+    MultiValue,
     ValueContainer,
     IndicatorSeparator,
     ClearIndicator,
@@ -221,8 +236,8 @@ const Page = () => {
     <>
       <CssBaseline />
       <Container>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={4}>
+          <Grid item>
             <Paper square className={classes.padding2}>
               <Autocomplete />
             </Paper>
