@@ -8,6 +8,7 @@ import {
   Select,
   MenuItem,
   Input,
+  Chip,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +20,12 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 100,
     maxWidth: 280,
   },
+  chip: {
+    margin: theme.spacing(1),
+    fontSize: 10,
+    maxHeight: 25,
+    marginTop: -3,
+  },
 }));
 
 const options = [
@@ -28,6 +35,20 @@ const options = [
   { id: 4, label: 'Fourth' },
   { id: 5, label: 'Fifth' },
 ];
+
+const Selected = ({ selected }: { selected: any }) => {
+  const classes = useStyles();
+
+  return selected.map((value: any) => (
+    <Chip
+      key={value}
+      label={
+        (options.find((option) => option.id === value) || { label: '' }).label
+      }
+      className={classes.chip}
+    />
+  ));
+};
 
 const Page = () => {
   const classes = useStyles();
@@ -49,6 +70,7 @@ const Page = () => {
             value={selected}
             onChange={onChange}
             input={<Input id="multi" />}
+            renderValue={(selected) => <Selected selected={selected} />}
           >
             {options.map((option) => (
               <MenuItem key={option.id} value={option.id}>
