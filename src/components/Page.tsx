@@ -3,87 +3,126 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
   FormControl,
-  FormControlLabel,
   Container,
-  FormLabel,
-  FormGroup,
-  Switch,
-  Checkbox,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-});
-
-const SwitchGroup: React.FC<{
-  label: string;
-  onChange: (
-    index: number,
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  values: { checked?: boolean; label: string }[];
-  checkbox?: boolean;
-}> = ({ values, label, onChange, checkbox }) => (
-  <FormControl component="fieldset">
-    <FormLabel component="legend">{label}</FormLabel>
-    <FormGroup>
-      {values.map((value, index) => (
-        <FormControlLabel
-          key={index}
-          control={
-            checkbox ? (
-              <Checkbox checked={value.checked} onChange={onChange(index)} />
-            ) : (
-              <Switch checked={value.checked} onChange={onChange(index)} />
-            )
-          }
-          label={value.label}
-        />
-      ))}
-    </FormGroup>
-  </FormControl>
-);
-
-SwitchGroup.propTypes = {
-  label: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  values: PropTypes.array.isRequired,
-  checkbox: PropTypes.bool,
-};
+  control: {
+    margin: theme.spacing(2),
+    minWidth: 200,
+  },
+}));
 
 const Page = () => {
   const classes = useStyles();
 
-  const [values, setValues] = useState([
-    { label: 'First', checked: false },
-    { label: 'Second', checked: false },
-    { label: 'Third', checked: false },
+  const [categories, setCategories] = useState<
+    {
+      label: string;
+      id: number;
+      category?: number;
+      selected?: boolean;
+    }[]
+  >([
+    { label: 'Eletronics', id: 1 },
+    { label: 'Clothing', id: 1 },
+    { label: 'Office', id: 1 },
   ]);
 
-  const onChange = (index: number) => () => {
-    const newValues = [...values];
-    const value = newValues[index];
-    newValues[index] = { ...value, checked: !value.checked };
-    setValues(newValues);
+  const [products, setProducts] = useState<
+    {
+      label: string;
+      id: number;
+      category?: number;
+      selected?: boolean;
+    }[]
+  >([
+    { label: 'TV', id: 1, category: 1 },
+    { label: 'Monitor', id: 1, category: 1 },
+    { label: 'Notebook', id: 1, category: 1 },
+    { label: 'T Shirt', id: 1, category: 2 },
+    { label: 'Pants', id: 1, category: 2 },
+    { label: 'Shoe', id: 1, category: 2 },
+    { label: 'Chair', id: 1, category: 3 },
+    { label: 'Table', id: 1, category: 3 },
+    { label: 'Desk', id: 1, category: 3 },
+  ]);
+
+  const setters = {
+    categories: setCategories,
+    products: setProducts,
   };
+
+  const collections = { categories, products };
+
+  const onChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+  ) => {
+    const name = event.target.name as 'categories' | 'products';
+    const value = event.target.value;
+    const setCollection = setters[name];
+    const collection = collections[name].map((item) => ({
+      ...item,
+      selected: false,
+    }));
+    const index = collection.findIndex(
+      (item) => item.id === +(value as string),
+    );
+    collection[index] = { ...collection[index], selected: true };
+    setCollection(collection);
+  };
+
+  const category = categories.find((category) => category.selected) || {
+    id: '',
+  };
+  const product = products.find((product) => product.selected) || { id: '' };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Container>
-        <SwitchGroup
-          label="Switch Choices"
-          values={values}
-          onChange={onChange}
-        />
-        <SwitchGroup
-          label="Checkbox Choices"
-          values={values}
-          onChange={onChange}
-          checkbox
-        />
+        <FormControl className={classes.control}>
+          <InputLabel htmlFor="categories">Category</InputLabel>
+          <Select
+            value={category.id}
+            onChange={onChange}
+            inputProps={{ name: 'categories', id: 'categories' }}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {categories.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.control} disabled={category.id === ''}>
+          <InputLabel htmlFor="Products">Product</InputLabel>
+          <Select
+            value={product.id}
+            onChange={onChange}
+            inputProps={{ name: 'products', id: 'values' }}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {products
+              .filter((product) => product.category === category.id)
+              .map((product) => (
+                <MenuItem key={product.id} value={product.id}>
+                  {product.label}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
       </Container>
     </div>
   );
