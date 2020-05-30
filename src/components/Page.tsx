@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 
 const options = [
   { label: 'First', value: 'first' },
-  { label: 'Second', value: 'second' },
+  { label: 'Second', value: 'second', disabled: true },
   { label: 'Third', value: 'third' },
 ];
 
@@ -27,10 +27,11 @@ const RadioGroup: React.FC<{
   value: string;
   name: string;
   label: string;
-  options: { label: string; value: string }[];
+  disabled?: boolean;
+  options: { label: string; value: string; disabled?: boolean }[];
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ value, name, label, options, onChange }) => (
-  <FormControl component="fieldset">
+}> = ({ value, name, label, disabled, options, onChange }) => (
+  <FormControl component="fieldset" disabled={disabled}>
     <FormLabel component="legend">{label}</FormLabel>
     <MaterialRadioGroup name={name} value={value} onChange={onChange}>
       {options.map((option, index) => (
@@ -39,6 +40,7 @@ const RadioGroup: React.FC<{
           control={<Radio />}
           value={option.value}
           label={option.label}
+          disabled={option.disabled}
         />
       ))}
     </MaterialRadioGroup>
@@ -49,6 +51,7 @@ RadioGroup.propTypes = {
   value: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   options: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };
