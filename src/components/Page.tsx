@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
-  FormGroup,
+  FormControl,
   FormControlLabel,
-  Checkbox,
-  Grid,
   Container,
+  FormLabel,
+  RadioGroup as MaterialRadioGroup,
+  Radio,
 } from '@material-ui/core';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import AccountBalanceOutlinedIcon from '@material-ui/icons/AccountBalanceOutlined';
-import BackupIcon from '@material-ui/icons/Backup';
-import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
-import BuildIcon from '@material-ui/icons/Build';
-import BuildOutlinedIcon from '@material-ui/icons/BuildOutlined';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   root: {
@@ -21,71 +17,62 @@ const useStyles = makeStyles({
   },
 });
 
-const initialItems = [
-  {
-    name: 'AccountBalance',
-    Icon: AccountBalanceOutlinedIcon,
-    CheckedIcon: AccountBalanceIcon,
-  },
-  {
-    name: 'Backup',
-    Icon: BackupOutlinedIcon,
-    CheckedIcon: BackupIcon,
-  },
-  {
-    name: 'Build',
-    Icon: BuildOutlinedIcon,
-    CheckedIcon: BuildIcon,
-  },
+const options = [
+  { label: 'First', value: 'first' },
+  { label: 'Second', value: 'second' },
+  { label: 'Third', value: 'third' },
 ];
+
+const RadioGroup: React.FC<{
+  value: string;
+  name: string;
+  label: string;
+  options: { label: string; value: string }[];
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({ value, name, label, options, onChange }) => (
+  <FormControl component="fieldset">
+    <FormLabel component="legend">{label}</FormLabel>
+    <MaterialRadioGroup name={name} value={value} onChange={onChange}>
+      {options.map((option, index) => (
+        <FormControlLabel
+          key={index}
+          control={<Radio />}
+          value={option.value}
+          label={option.label}
+        />
+      ))}
+    </MaterialRadioGroup>
+  </FormControl>
+);
+
+RadioGroup.propTypes = {
+  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 const Page = () => {
   const classes = useStyles();
-  const [items, setItems] = useState<any>({});
 
-  useEffect(() => {
-    setItems(
-      initialItems.reduce(
-        (state, item) => ({ ...state, [item.name]: false }),
-        {},
-      ),
-    );
-  }, []);
+  const [value, setValue] = useState('first');
 
-  const onChange = ({
-    target: { name, checked },
-  }: {
-    target: { name: string; checked: boolean };
-  }) => {
-    setItems({ ...items, [name]: checked });
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
   };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Container>
-        <Grid container direction="column" spacing={4}>
-          <Grid item>
-            <FormGroup>
-              {initialItems.map(({ name, Icon, CheckedIcon }, index) => (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={items[name]}
-                      onChange={onChange}
-                      inputProps={{ name }}
-                      icon={<Icon fontSize="small" />}
-                      checkedIcon={<CheckedIcon fontSize="small" />}
-                    />
-                  }
-                  label={name}
-                />
-              ))}
-            </FormGroup>
-          </Grid>
-        </Grid>
+        <RadioGroup
+          value={value}
+          options={options}
+          name="radio1"
+          label="Pick One"
+          onChange={onChange}
+        />
       </Container>
     </div>
   );
