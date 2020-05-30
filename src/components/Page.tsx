@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormGroup,
   Switch,
+  Checkbox,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
@@ -23,7 +24,8 @@ const SwitchGroup: React.FC<{
     index: number,
   ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   values: { checked?: boolean; label: string }[];
-}> = ({ values, label, onChange }) => (
+  checkbox?: boolean;
+}> = ({ values, label, onChange, checkbox }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">{label}</FormLabel>
     <FormGroup>
@@ -31,7 +33,11 @@ const SwitchGroup: React.FC<{
         <FormControlLabel
           key={index}
           control={
-            <Switch checked={value.checked} onChange={onChange(index)} />
+            checkbox ? (
+              <Checkbox checked={value.checked} onChange={onChange(index)} />
+            ) : (
+              <Switch checked={value.checked} onChange={onChange(index)} />
+            )
           }
           label={value.label}
         />
@@ -44,6 +50,7 @@ SwitchGroup.propTypes = {
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   values: PropTypes.array.isRequired,
+  checkbox: PropTypes.bool,
 };
 
 const Page = () => {
@@ -66,7 +73,17 @@ const Page = () => {
     <div className={classes.root}>
       <CssBaseline />
       <Container>
-        <SwitchGroup label="Choices" values={values} onChange={onChange} />
+        <SwitchGroup
+          label="Switch Choices"
+          values={values}
+          onChange={onChange}
+        />
+        <SwitchGroup
+          label="Checkbox Choices"
+          values={values}
+          onChange={onChange}
+          checkbox
+        />
       </Container>
     </div>
   );
